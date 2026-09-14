@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Évaluation — Module 4 : Diffusion et distribution du documentaire</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ÉCRAN 1 : IDENTIFICATION -->
+  <div id="screen-start" class="screen">
+    <div class="card">
+      <h1>Évaluation finale</h1>
+      <p class="subtitle">Module 4 — Diffusion et distribution du documentaire</p>
+
+      <div class="rules">
+        <p><strong>Avant de commencer :</strong></p>
+        <ul>
+          <li>40 questions, 1h30 chronométrées</li>
+          <li>Restez sur cette page pendant toute la durée</li>
+          <li>Changer de fenêtre ou d'application efface vos réponses en cours et régénère un nouveau tirage de questions — le chronomètre, lui, continue</li>
+          <li>Votre note vous sera transmise après validation</li>
+        </ul>
+      </div>
+
+      <label for="input-nom">Nom et prénom</label>
+      <input type="text" id="input-nom" placeholder="Ex. Camille Dubois" autocomplete="name" />
+
+      <button id="btn-start" class="btn-primary">Commencer l'évaluation</button>
+      <p id="start-error" class="error"></p>
+    </div>
+  </div>
+
+  <!-- ÉCRAN 2 : QUIZ -->
+  <div id="screen-quiz" class="screen hidden">
+    <div class="topbar">
+      <div id="timer" class="timer">1:30:00</div>
+      <div id="progress" class="progress">Question 1 / 40</div>
+    </div>
+
+    <div id="violation-banner" class="violation-banner hidden">
+      ⚠ Changement de fenêtre détecté — réponses effacées, nouveau tirage généré. Le chronomètre continue.
+    </div>
+
+    <div class="card" id="question-card">
+      <p id="question-text" class="question-text"></p>
+      <div id="question-options" class="options"></div>
+    </div>
+
+    <div class="nav-buttons">
+      <button id="btn-prev" class="btn-secondary">Précédent</button>
+      <button id="btn-next" class="btn-secondary">Suivant</button>
+    </div>
+
+    <button id="btn-submit" class="btn-primary hidden">Valider et envoyer mes réponses</button>
+  </div>
+
+  <!-- ÉCRAN 3 : CONFIRMATION -->
+  <div id="screen-done" class="screen hidden">
+    <div class="card">
+      <h1>Évaluation envoyée</h1>
+      <p id="done-message">Vos réponses ont été enregistrées. Votre note vous sera communiquée après validation par le formateur.</p>
+    </div>
+  </div>
+
+  <!-- ÉCRAN ERREUR -->
+  <div id="screen-error" class="screen hidden">
+    <div class="card">
+      <h1>Une erreur est survenue</h1>
+      <p id="error-message"></p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
