@@ -1,6 +1,13 @@
 name = "qcm-module4"
+main = "src/worker.js"
 compatibility_date = "2024-11-01"
-pages_build_output_dir = "docs"
+
+# Fichiers statiques du frontend (docs/), servis directement par Cloudflare ;
+# le Worker (src/worker.js) n'est invoqué que pour les chemins qui ne
+# correspondent à aucun fichier statique, c'est-à-dire /api/*.
+[assets]
+directory = "docs"
+binding = "ASSETS"
 
 # Espace de stockage clé-valeur Cloudflare KV, utilisé pour les sessions en
 # cours et les résultats enregistrés. Remplacez "id" par l'identifiant réel

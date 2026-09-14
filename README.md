@@ -53,11 +53,11 @@ avec un vrai niveau gratuit (100 emails/jour, 3000/mois) sans carte bancaire.
 Stagiaire (mobile ou ordinateur)
         │
         ▼
-Cloudflare Pages
-  ├─ docs/ (index.html, style.css, app.js)   ← interface, statique, publique
+Cloudflare (Worker + assets statiques, un seul projet)
+  ├─ docs/ (index.html, style.css, app.js)   ← interface, servie directement, publique
   │         │  fetch() POST /api/...
   │         ▼
-  └─ functions/api/*.js                       ← backend : questions, correction,
+  └─ src/worker.js → functions/api/*.js       ← backend : questions, correction,
               │                                  horodatage, calcul de note
               ▼
      Cloudflare KV (namespace QCM_KV)          ← stockage des sessions et résultats
@@ -67,10 +67,11 @@ Cloudflare Pages
 ```
 
 Le corrigé (bonnes réponses) vit **uniquement** dans `functions/_lib/questions.js`,
-qui n'est jamais servi comme fichier statique par Cloudflare Pages (seul le
-contenu de `docs/` est public) — un stagiaire qui inspecte le code source de la
-page ne peut donc pas voir les réponses. La correction s'exécute uniquement dans
-les fonctions serveur (`functions/api/submit.js`), jamais dans le navigateur.
+qui n'est jamais servi comme fichier statique (seul le contenu de `docs/` est
+public) — un stagiaire qui inspecte le code source de la page ne peut donc pas
+voir les réponses. La correction s'exécute uniquement dans le Worker
+(`functions/api/submit.js`, appelé depuis `src/worker.js`), jamais dans le
+navigateur.
 
 ---
 
@@ -110,47 +111,47 @@ Le dépôt doit contenir à sa racine les dossiers `docs/` et `functions/`, ains
 que `wrangler.toml`. C'est déjà le cas dans ce projet — poussez simplement vos
 modifications sur votre dépôt GitHub habituel.
 
-## Étape 5 — Créer le projet Cloudflare Pages
+## Étape 5 — Créer le projet Cloudflare (Workers + assets statiques)
+
+Le dépôt utilise le modèle actuel de Cloudflare : un Worker (`src/worker.js`)
+qui gère les routes `/api/*`, et des fichiers statiques (`docs/`) servis
+directement — les deux dans un seul projet, déclaré dans `wrangler.toml`.
 
 1. Dans le tableau de bord Cloudflare : **Workers & Pages > Créer une
-   application > Pages > Connecter à Git**.
+   application > Importer un dépôt** (ou *Connecter à Git*).
 2. Autorisez Cloudflare à accéder à votre compte GitHub, puis sélectionnez ce
    dépôt.
-3. Paramètres de build :
-   - **Framework preset** : `None`
-   - **Commande de build** : (laisser vide)
-   - **Répertoire de sortie de build** : `docs`
-   - **Répertoire racine** : `/` (par défaut)
-4. Cliquez sur **Enregistrer et déployer**. Le premier déploiement se lance —
-   le site s'affichera, mais les appels à l'API ne fonctionneront pas encore
-   (bindings à configurer, étape suivante).
+3. Cloudflare détecte `wrangler.toml` et propose une **commande de déploiement**
+   par défaut : laissez `npx wrangler deploy` (ne la changez pas en
+   `wrangler pages deploy`, qui ne fonctionne pas avec ce modèle de projet).
+4. Cliquez sur **Enregistrer et déployer**. Le premier déploiement échouera
+   probablement (les liaisons KV/email ne sont pas encore configurées) — c'est
+   normal, l'étape suivante corrige ça.
 
-## Étape 6 — Relier le stockage KV et les clés au projet Pages
+## Étape 6 — Relier le stockage KV et les clés au projet
 
-1. Dans votre projet Pages : **Paramètres (Settings) > Functions**.
-2. Section **Liaisons d'espace de noms KV** (*KV namespace bindings*) : ajoutez
-   une liaison avec :
-   - Nom de variable : `QCM_KV`
-   - Espace de noms KV : celui créé à l'étape 2 (`qcm-module4`)
-3. Dans **Paramètres > Variables d'environnement** (*Environment variables*),
-   ajoutez (pour l'environnement **Production**, et aussi **Preview** si vous
-   comptez tester des branches) :
-   - `RESEND_API_KEY` → la clé copiée à l'étape 3 (à ajouter en tant que
-     **secret / chiffrée**, pas en clair)
+1. Dans votre projet : **Paramètres (Settings) > Variables and Secrets** (ou
+   *Environment variables*, selon la version de l'interface).
+2. Ajoutez :
+   - `RESEND_API_KEY` → la clé copiée à l'étape 3 (type **Secret**, pas texte
+     en clair)
    - `ADMIN_EMAIL` → l'adresse email du formateur (doit correspondre à
      l'adresse du compte Resend, voir étape 3)
    - `EMAIL_FROM` (optionnel) → laissez vide pour utiliser la valeur par défaut
      `QCM Module 4 <onboarding@resend.dev>`, ou indiquez une adresse `@votredomaine`
      si vous avez vérifié un domaine sur Resend
-4. Retournez dans l'onglet **Déploiements** (*Deployments*) et cliquez sur
-   **Réessayer le déploiement** (*Retry deployment*) sur le dernier déploiement,
-   pour qu'il prenne en compte les nouvelles liaisons — ou faites simplement un
-   nouveau `git push`.
+3. Le binding KV (`QCM_KV`) est déjà déclaré dans `wrangler.toml` avec l'ID de
+   votre namespace (étape 2) — Cloudflare le relie automatiquement au
+   déploiement, rien à faire de plus ici pour lui.
+4. Retournez dans l'onglet **Déploiements** et cliquez sur **Réessayer le
+   déploiement** (*Retry deployment*) sur le dernier déploiement, pour qu'il
+   prenne en compte les nouvelles variables — ou faites simplement un nouveau
+   `git push`.
 
 ## Étape 7 — Test complet avant utilisation réelle
 
-1. Ouvrez l'URL Cloudflare Pages (format `https://votre-projet.pages.dev`) sur
-   un téléphone.
+1. Ouvrez l'URL du projet (format `https://qcm-module4.<votre-compte>.workers.dev`,
+   visible dans le tableau de bord) sur un téléphone.
 2. Entrez un nom test, démarrez l'évaluation. Vérifiez que le chronomètre
    démarre bien à 1:30:00.
 3. Répondez à 2-3 questions, puis changez d'application (ou verrouillez
@@ -186,9 +187,9 @@ cp .dev.vars.example .dev.vars   # puis renseignez vos vraies clés dans .dev.va
 npm run dev
 ```
 
-Le site est alors accessible sur `http://localhost:8788`, avec un stockage KV
-local (isolé du KV de production) et les variables de `.dev.vars` (jamais
-commité — il est dans `.gitignore`).
+Le site est alors accessible sur l'URL locale affichée par Wrangler, avec un
+stockage KV local (isolé du KV de production) et les variables de
+`.dev.vars` (jamais commité — il est dans `.gitignore`).
 
 Pour déployer manuellement en ligne de commande (alternative à la connexion Git
 du tableau de bord) :
@@ -257,16 +258,18 @@ Dans `functions/_lib/config.js` :
 docs/index.html              → structure de la page
 docs/style.css                → mise en forme mobile-first
 docs/app.js                   → logique frontend (chrono, anti-triche, appels API)
-functions/api/health.js       → route GET /api/health (vérification que l'API répond)
-functions/api/start.js        → route POST /api/start (démarrage, tirage, horodatage serveur)
-functions/api/violation.js    → route POST /api/violation (nouveau tirage après changement de fenêtre)
-functions/api/submit.js       → route POST /api/submit (correction serveur, enregistrement, email)
+src/worker.js                 → point d'entrée du Worker : route /api/* vers les handlers,
+                                 le reste retombe sur les fichiers statiques de docs/
+functions/api/health.js       → handler GET /api/health (vérification que l'API répond)
+functions/api/start.js        → handler POST /api/start (démarrage, tirage, horodatage serveur)
+functions/api/violation.js    → handler POST /api/violation (nouveau tirage après changement de fenêtre)
+functions/api/submit.js       → handler POST /api/submit (correction serveur, enregistrement, email)
 functions/_lib/questions.js   → banque de 140 questions AVEC les bonnes réponses (jamais public)
 functions/_lib/random.js      → tirage pseudo-aléatoire déterministe (mulberry32 + hash)
 functions/_lib/grading.js     → correction et filtrage des questions envoyées au client
 functions/_lib/email.js       → envoi du résultat par email via l'API Resend
 functions/_lib/config.js      → réglages (nombre de questions, durée, TTL session)
-wrangler.toml                  → configuration Cloudflare Pages (dossier de sortie, liaison KV)
+wrangler.toml                  → configuration Cloudflare (Worker, assets statiques, liaison KV)
 package.json                  → scripts npm (dev local, déploiement CLI)
 .dev.vars.example             → modèle de variables d'environnement pour le développement local
 README.md                     → ce fichier
