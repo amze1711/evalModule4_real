@@ -1,7 +1,7 @@
 // ============================================================
 // CONFIGURATION — à adapter après déploiement du backend
 // ============================================================
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLVx0rhBHVctEh7RnAboIj6_-dlYdn7hgoA3o8xe7LK2C37Gwm_OCxsZ2IgSRlbw9o/exec";
+const APPS_SCRIPT_URL = "COLLEZ_ICI_L_URL_DE_VOTRE_DEPLOIEMENT_APPS_SCRIPT";
 
 // ============================================================
 // ÉTAT
@@ -34,7 +34,19 @@ async function callBackend(payload) {
     headers: { "Content-Type": "text/plain;charset=utf-8" }, // évite le preflight CORS
     body: JSON.stringify(payload),
   });
-  return res.json();
+  const raw = await res.text();
+  try {
+    return JSON.parse(raw);
+  } catch (e) {
+    // La réponse n'est pas du JSON : on affiche le début du contenu reçu
+    // (souvent une page d'erreur Google) pour pouvoir diagnostiquer vite,
+    // plutôt que le message générique "unexpected character..." du navigateur.
+    const apercu = raw.slice(0, 200).replace(/\s+/g, " ").trim();
+    throw new Error(
+      "Le serveur n'a pas renvoyé de JSON valide. Vérifiez l'URL Apps Script et les " +
+      "droits de déploiement (« Tout le monde »). Début de la réponse reçue : " + apercu
+    );
+  }
 }
 
 // ============================================================
