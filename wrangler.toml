@@ -7,4 +7,4 @@ pages_build_output_dir = "docs"
 # du namespace KV que vous créez à l'étape 2 du README (Workers & Pages > KV).
 [[kv_namespaces]]
 binding = "QCM_KV"
-id = "REMPLACER_PAR_ID_NAMESPACE_KV"
+id = "5a9bc090e00c448585943397e74077da"
