@@ -1,7 +1,7 @@
 // ============================================================
 // CONFIGURATION — à adapter après déploiement du backend
 // ============================================================
-const APPS_SCRIPT_URL = "COLLEZ_ICI_L_URL_DE_VOTRE_DEPLOIEMENT_APPS_SCRIPT";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_jxJogIs6p4QoJfAoLvla-Gr1Q6Orq-nEsVLsMvDJsRBKW6CFQrSjTtbfqfNSag6i/exec";
 
 // ============================================================
 // ÉTAT
@@ -28,12 +28,17 @@ function showScreen(name) {
   });
 }
 
-async function callBackend(payload) {
-  const res = await fetch(APPS_SCRIPT_URL, {
-    method: "POST",
-    headers: { "Content-Type": "text/plain;charset=utf-8" }, // évite le preflight CORS
-    body: JSON.stringify(payload),
+async function callBackend(params) {
+  // Toutes les requêtes passent en GET, données dans l'URL — voir Code.gs
+  // pour le détail (le POST est parfois converti en GET par une redirection
+  // interne à Google, ce qui cassait l'appel).
+  const url = new URL(APPS_SCRIPT_URL);
+  Object.keys(params).forEach(key => {
+    const value = typeof params[key] === "object" ? JSON.stringify(params[key]) : params[key];
+    url.searchParams.set(key, value);
   });
+
+  const res = await fetch(url.toString(), { method: "GET" });
   const raw = await res.text();
   try {
     return JSON.parse(raw);
