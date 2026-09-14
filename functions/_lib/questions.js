@@ -1,0 +1,480 @@
+// Banque de 140 questions (mélange QCM / texte court), migrée telle quelle
+// depuis l'ancien backend Google Apps Script (Code.gs, tableau QUESTION_BANK).
+// Chaque question a un id unique, un type, un texte, des options si QCM,
+// une réponse correcte, et le nombre de points.
+//
+// Ce fichier vit sous functions/_lib/ : Cloudflare Pages ne sert JAMAIS ce
+// dossier comme fichier statique (seul le contenu de docs/ est public), et
+// les préfixes "_" excluent en plus ce répertoire du routage des Functions.
+// Les bonnes réponses ne sont donc jamais visibles par un stagiaire.
+export const QUESTION_BANK = [
+  // --- Partie 1 — Séquence 1.1 : Évaluer les effets ---
+  { id: "q001", type: "mcq", text: "Qu'est-ce qui distingue l'impact de l'audience d'un documentaire ?",
+    options: ["L'impact est toujours plus élevé que l'audience", "L'audience mesure le nombre de spectateurs, l'impact mesure les effets produits", "Ce sont deux mots pour la même chose", "L'impact ne se mesure qu'après un an"],
+    answer: "L'audience mesure le nombre de spectateurs, l'impact mesure les effets produits", points: 1 },
+  { id: "q002", type: "mcq", text: "Parmi les 5 types d'impact vus en cours, lequel correspond à « mise à l'agenda d'un sujet » ?",
+    options: ["Impact médiatique", "Impact éducatif", "Impact politique", "Impact institutionnel"],
+    answer: "Impact politique", points: 1 },
+  { id: "q003", type: "text", text: "Citez UNE méthode concrète (vue en cours) pour observer l'impact d'un documentaire après sa sortie.",
+    answer: ["questionnaire de sortie", "veille presse", "veille réseaux", "comptage des demandes de projection", "témoignages spectateurs"], points: 2 },
+  { id: "q004", type: "mcq", text: "La campagne #Unnompourchacun est liée à quel documentaire ?",
+    options: ["Demain", "Numéro 387, disparu en Méditerranée", "20 jours à Marioupol", "Free Solo"],
+    answer: "Numéro 387, disparu en Méditerranée", points: 1 },
+
+  // --- Séquence 1.2 : Analyser réception, controverses ---
+  { id: "q005", type: "mcq", text: "Un avis de critique centré sur « ce que le film dit du monde » relève de quel niveau de lecture ?",
+    options: ["Esthétique", "Politique", "Industriel", "Technique"],
+    answer: "Politique", points: 1 },
+  { id: "q006", type: "mcq", text: "Selon la méthode vue en cours, comment repère-t-on un vrai « point fort » d'un film à partir de plusieurs critiques ?",
+    options: ["On prend l'avis du critique le plus connu", "On cherche les répétitions entre critiques indépendantes", "On fait la moyenne des notes", "On ignore les critiques négatives"],
+    answer: "On cherche les répétitions entre critiques indépendantes", points: 1 },
+  { id: "q007", type: "text", text: "Scénario : un article pointe un problème sur une scène du film. D'autres médias reprennent le sujet. Quelle est l'étape suivante typique du circuit d'une controverse, selon le cours ?",
+    answer: ["réaction du réalisateur", "réaction du producteur", "réaction de l'équipe"], points: 2 },
+
+  // --- Séquence 1.3 : Identifier les débouchés ---
+  { id: "q008", type: "mcq", text: "Lequel de ces circuits impose une obligation technique appelée PAD ?",
+    options: ["Festival", "Télévision", "Non-theatrical", "Réseaux sociaux"],
+    answer: "Télévision", points: 1 },
+  { id: "q009", type: "mcq", text: "Un film au sujet grand public, au format calibré et à forte actualité est plutôt adapté à :",
+    options: ["Festival / salle", "TV / plateforme", "Aucun des deux", "Uniquement le non-theatrical"],
+    answer: "TV / plateforme", points: 1 },
+
+  // --- Séquence 1.4 : Aligner le film avec son public ---
+  { id: "q010", type: "mcq", text: "Pourquoi dire que son film « s'adresse à tout le monde » pose un problème ?",
+    options: ["C'est interdit par la loi", "Un message pour tout le monde ne parle vraiment à personne", "Ça coûte plus cher en communication", "Ça réduit le nombre de festivals possibles"],
+    answer: "Un message pour tout le monde ne parle vraiment à personne", points: 1 },
+  { id: "q011", type: "text", text: "Citez 2 des 6 questions du modèle de profil type vu en cours (ex. « qui est-il », etc.)",
+    answer: ["qui est-il", "habitude", "ce qui le touche", "quand", "où", "attend", "phrase après"], points: 2 },
+  { id: "q012", type: "mcq", text: "Dans l'exemple rempli du cours (Camille, 34 ans), quel type de documentaire est concerné ?",
+    options: ["Documentaire historique", "Documentaire nature", "Documentaire musical", "Documentaire d'enquête"],
+    answer: "Documentaire nature", points: 1 },
+
+  // --- Séquence 1.5 : Plan de circulation ---
+  { id: "q013", type: "mcq", text: "Que risque un film qui est mis en ligne avant sa sortie en festival ?",
+    options: ["Rien, ce n'est jamais vérifié", "De perdre l'accès à des festivals qui exigent une première", "D'obtenir automatiquement plus de festivals", "De devoir payer une taxe"],
+    answer: "De perdre l'accès à des festivals qui exigent une première", points: 2 },
+  { id: "q014", type: "mcq", text: "Dans un circuit hiérarchisé, quelle est la bonne première étape ?",
+    options: ["Festivals régionaux", "Festival de lancement (première)", "Festivals spécialisés", "Envoi simultané partout"],
+    answer: "Festival de lancement (première)", points: 1 },
+  { id: "q015", type: "text", text: "Scénario : un festival a une deadline de dépôt au 15 mars, une réponse annoncée en juin, et le festival a lieu en octobre. Si vous déposez le 20 mars, que se passe-t-il selon la règle vue en cours sur les deadlines ?",
+    answer: ["hors délai", "refusé", "trop tard", "non recevable", "candidature refusée"], points: 2 },
+
+  // --- Séquence 2.1 : Exigences des diffuseurs ---
+  { id: "q016", type: "mcq", text: "Le PAD désigne :",
+    options: ["Le prix d'achat du film", "Le film livré conforme aux règles techniques du diffuseur", "Le plan d'action documentaire", "Un type de plateforme"],
+    answer: "Le film livré conforme aux règles techniques du diffuseur", points: 1 },
+  { id: "q017", type: "mcq", text: "Un modèle où le public paie un abonnement mensuel s'appelle :",
+    options: ["TVOD", "AVOD", "SVOD", "FAST"],
+    answer: "SVOD", points: 1 },
+  { id: "q018", type: "mcq", text: "Un modèle gratuit, financé par la publicité, sous forme de chaînes en direct s'appelle :",
+    options: ["FVOD", "FAST", "TVOD", "SVOD"],
+    answer: "FAST", points: 1 },
+  { id: "q019", type: "text", text: "Citez le sigle du modèle où le public paie une seule fois pour louer ou acheter un film.",
+    answer: ["TVOD"], points: 2 },
+
+  // --- Séquence 2.2 : Bons interlocuteurs ---
+  { id: "q020", type: "mcq", text: "Qui gère l'argent et l'organisation générale du film ?",
+    options: ["Le distributeur", "Le producteur", "Le vendeur international", "Le diffuseur"],
+    answer: "Le producteur", points: 1 },
+  { id: "q021", type: "text", text: "Citez 2 des 4 éléments qu'un mandat de distribution doit préciser (vus en cours).",
+    answer: ["territoire", "durée", "exclusivité", "commission"], points: 2 },
+  { id: "q022", type: "mcq", text: "Face à un producteur, quel angle de présentation privilégier selon le cours ?",
+    options: ["Le potentiel de circulation", "Le désir de film et le dispositif", "Le prix de vente", "Le nombre de festivals visés"],
+    answer: "Le désir de film et le dispositif", points: 2 },
+
+  // --- Séquence 2.3 : Dossier de presse ---
+  { id: "q023", type: "mcq", text: "Un dossier de presse s'adresse en priorité à :",
+    options: ["Aux financeurs", "Aux journalistes", "Au grand public uniquement", "Aux acteurs"],
+    answer: "Aux journalistes", points: 1 },
+  { id: "q024", type: "text", text: "Citez 3 des 9 parties d'un dossier de presse vues en cours.",
+    answer: ["couverture", "fiche technique", "générique", "synopsis", "note d'intention", "note de production", "entretien", "biographie", "filmographie", "visuels", "contacts"], points: 2 },
+  { id: "q025", type: "mcq", text: "Quelle est une erreur fréquente citée en cours pour un dossier de presse ?",
+    options: ["Mettre trop de contacts", "Mélanger dossier artistique et dossier presse", "Utiliser trop de photos", "Le rendre bilingue"],
+    answer: "Mélanger dossier artistique et dossier presse", points: 1 },
+
+  // --- Séquence 2.4 : Bande-annonce ---
+  { id: "q026", type: "mcq", text: "Un teaser, contrairement à une bande-annonce :",
+    options: ["Doit être fait après la sortie", "Peut être fait avant la fin du montage", "Dure toujours plus de 3 minutes", "Doit tout expliquer du film"],
+    answer: "Peut être fait avant la fin du montage", points: 1 },
+  { id: "q027", type: "text", text: "Citez 2 des 7 éléments de structure d'un teaser efficace vus en cours.",
+    answer: ["accroche", "situation", "tension", "personnage", "voix", "promesse", "titre", "sélection", "prix"], points: 2 },
+
+  // --- Séquence 2.5 : Communication cohérente ---
+  { id: "q028", type: "mcq", text: "Lequel n'est PAS un des 4 outils de communication vus en cours ?",
+    options: ["Réseaux sociaux", "Mailing", "Relais", "Panneaux publicitaires en ville"],
+    answer: "Panneaux publicitaires en ville", points: 1 },
+  { id: "q029", type: "mcq", text: "Un bon calendrier éditorial doit avoir un rythme :",
+    options: ["Décroissant à l'approche de la sortie", "Égal chaque semaine", "Croissant à l'approche de la sortie", "Aléatoire"],
+    answer: "Croissant à l'approche de la sortie", points: 2 },
+  { id: "q030", type: "text", text: "Scénario : votre calendrier éditorial prévoit d'envoyer le dossier de presse ET de publier le même contenu sur les réseaux sociaux, la même semaine, avant la sortie. Quel principe du cours cela viole-t-il ?",
+    answer: ["distinction presse public", "embargo", "ne pas mélanger presse et public", "confidentialité presse"], points: 3 },
+
+  // --- Séquence 2.6 : Atelier retour critique ---
+  { id: "q031", type: "mcq", text: "Selon le cours, un retour donné par UNE seule personne isolée doit être :",
+    options: ["Suivi immédiatement", "Considéré, mais pas suivi automatiquement", "Ignoré totalement", "Transmis au diffuseur"],
+    answer: "Considéré, mais pas suivi automatiquement", points: 2 },
+  { id: "q032", type: "mcq", text: "Un retour répété par PLUSIEURS personnes doit être :",
+    options: ["Ignoré", "Corrigé en priorité", "Gardé pour plus tard", "Transmis à un avocat"],
+    answer: "Corrigé en priorité", points: 1 },
+
+  // --- Séquence 2.7 : Prise de parole ---
+  { id: "q033", type: "mcq", text: "Avant une interview, combien de messages clés le cours recommande-t-il de préparer ?",
+    options: ["1", "3", "10", "Aucun, il faut improviser"],
+    answer: "3", points: 1 },
+  { id: "q034", type: "mcq", text: "Face à une question hostile en Q&A, le bon réflexe selon le cours est :",
+    options: ["Couper la parole rapidement", "Répondre avec calme, sans défensive", "Refuser de répondre", "Rire pour détendre"],
+    answer: "Répondre avec calme, sans défensive", points: 2 },
+
+  // --- Séquence 2.8 : Rétroplanning ---
+  { id: "q035", type: "mcq", text: "Un rétroplanning se construit :",
+    options: ["En partant d'aujourd'hui et en avançant", "En partant de la date de sortie visée et en remontant", "Au hasard", "Seulement après la sortie"],
+    answer: "En partant de la date de sortie visée et en remontant", points: 1 },
+  { id: "q036", type: "text", text: "Comment appelle-t-on l'accord qui interdit aux journalistes de publier avant une date précise ?",
+    answer: ["embargo"], points: 2 },
+  { id: "q037", type: "mcq", text: "Dans l'ordre type vu en cours, que vient faire la presse par rapport au festival ?",
+    options: ["Avant la première festival", "Après la première festival", "Les deux sont indépendants", "La presse ne dépend jamais du festival"],
+    answer: "Après la première festival", points: 2 },
+
+  // --- Séquence 2.9 : Circulation internationale ---
+  { id: "q038", type: "mcq", text: "Le « master » d'un film désigne :",
+    options: ["Le réalisateur principal", "Le fichier final du film, livré selon des standards précis", "Le contrat de distribution", "Le titre international du film"],
+    answer: "Le fichier final du film, livré selon des standards précis", points: 1 },
+  { id: "q039", type: "mcq", text: "Quelle langue de sous-titrage est généralement la première étape vers une circulation internationale ?",
+    options: ["Le mandarin", "L'anglais", "L'espagnol", "Aucune, ce n'est jamais nécessaire"],
+    answer: "L'anglais", points: 1 },
+  { id: "q040", type: "text", text: "Comment appelle-t-on la liste des dialogues avec minutage, qui facilite la traduction ?",
+    answer: ["spotting list"], points: 2 },
+  { id: "q041", type: "mcq", text: "Distribution nationale et ventes internationales relèvent de :",
+    options: ["Un seul et même contrat", "Deux contrats différents", "Aucun contrat n'est nécessaire", "Un contrat oral suffit"],
+    answer: "Deux contrats différents", points: 2 },
+
+  // --- Séquence 2.10 : Négociation ---
+  { id: "q042", type: "mcq", text: "Lequel de ces éléments n'est JAMAIS négociable selon le cours ?",
+    options: ["Le montant", "Le calendrier de livraison", "Le droit moral", "Certains droits secondaires"],
+    answer: "Le droit moral", points: 2 },
+  { id: "q043", type: "text", text: "Comment appelle-t-on le montant minimum en dessous duquel on refuse d'aller en négociation ?",
+    answer: ["prix plancher"], points: 2 },
+  { id: "q044", type: "mcq", text: "Un bon argument de valeur doit s'appuyer sur :",
+    options: ["Une conviction personnelle", "Un fait vérifiable", "Une intuition", "Une comparaison avec un autre auteur"],
+    answer: "Un fait vérifiable", points: 1 },
+
+  // --- Séquence 2.12 : Choisir sa stratégie ---
+  { id: "q045", type: "mcq", text: "Un tableau décisionnel sert à :",
+    options: ["Remplacer la stratégie", "Comparer deux options selon les mêmes critères", "Calculer un budget uniquement", "Rédiger un contrat"],
+    answer: "Comparer deux options selon les mêmes critères", points: 1 },
+
+  // --- Séquence 2.13 : Contraintes de circulation ---
+  { id: "q046", type: "mcq", text: "« Le film passe ce soir à 21h sur une chaîne » relève de :",
+    options: ["La distribution", "La diffusion", "L'exploitation", "Le mandat"],
+    answer: "La diffusion", points: 1 },
+  { id: "q047", type: "mcq", text: "« Le film est disponible seulement en Belgique et en France, pour 2 ans » relève de :",
+    options: ["La diffusion", "La distribution", "L'exploitation", "Aucun des trois"],
+    answer: "L'exploitation", points: 1 },
+  { id: "q048", type: "text", text: "Comment appelle-t-on la période où un film ne peut pas être montré ailleurs, pour protéger une exclusivité ?",
+    answer: ["holdback"], points: 2 },
+  { id: "q049", type: "mcq", text: "Le territoire, dans un contrat, désigne :",
+    options: ["La durée du contrat", "La zone géographique où le contrat s'applique", "Le montant payé", "Le nom du distributeur"],
+    answer: "La zone géographique où le contrat s'applique", points: 1 },
+
+  // --- Séquence 2.14 : Finalisation ---
+  { id: "q050", type: "mcq", text: "Avant d'envoyer un dossier à un vrai diffuseur, le cours recommande de vérifier en dernier :",
+    options: ["Le prix du film", "Le bon destinataire et le bon fichier joint", "Le nombre de festivals visés", "La couleur de l'affiche uniquement"],
+    answer: "Le bon destinataire et le bon fichier joint", points: 2 },
+
+  // --- Séquence 2.15 : Simulation rendez-vous ---
+  { id: "q051", type: "mcq", text: "Un rendez-vous individuel avec un diffuseur, comparé à un pitch collectif, est :",
+    options: ["Plus formel", "Plus interactif, avec des questions imprévues", "Toujours plus court", "Sans aucune différence"],
+    answer: "Plus interactif, avec des questions imprévues", points: 2 },
+
+  // --- Séquence 2.16 : Bilan ---
+  { id: "q052", type: "text", text: "Citez un des éléments qu'un plan d'action individuel doit contenir selon le cours.",
+    answer: ["action concrète", "échéance", "date", "prochaines actions"], points: 2 },
+
+  // --- Questions transversales / scénarios complets ---
+  { id: "q053", type: "text", text: "Scénario : votre documentaire de 52 minutes doit être proposé à une chaîne TV française, un festival international, et une plateforme SVOD nord-américaine. Citez UN élément technique qui devra probablement exister en plusieurs versions.",
+    answer: ["master", "sous-titres", "format", "fichier"], points: 3 },
+  { id: "q054", type: "mcq", text: "Un documentaire orienté festival (cinéphile, formes singulières) correspond à quel profil de public, selon le cours ?",
+    options: ["Profil orienté plateforme/TV", "Profil orienté festival", "Aucun profil ne s'applique", "Le profil ne compte pas pour un festival"],
+    answer: "Profil orienté festival", points: 1 },
+  { id: "q055", type: "text", text: "Scénario : un festival exige une première mondiale. Votre film est déjà disponible en ligne depuis 2 mois. Que risque votre candidature ?",
+    answer: ["refus", "refusée", "rejetée", "non éligible"], points: 3 },
+  { id: "q056", type: "mcq", text: "Dans la grille de correction d'un exercice de communication, un calendrier qui s'arrête à J0 (jour de sortie) est considéré comme :",
+    options: ["Complet", "Une erreur fréquente à corriger", "Idéal", "Hors sujet"],
+    answer: "Une erreur fréquente à corriger", points: 2 },
+  { id: "q057", type: "mcq", text: "La différence principale entre un producteur et un distributeur est :",
+    options: ["Le producteur gère l'argent et l'organisation, le distributeur fait circuler le film une fois prêt", "Ce sont deux noms pour le même métier", "Le distributeur intervient avant le producteur", "Le producteur n'intervient jamais avant la sortie"],
+    answer: "Le producteur gère l'argent et l'organisation, le distributeur fait circuler le film une fois prêt", points: 2 },
+  { id: "q058", type: "text", text: "Citez le nom du document qui réunit les outils et la stratégie de communication d'un projet.",
+    answer: ["plan de communication"], points: 2 },
+  { id: "q059", type: "mcq", text: "Selon le cours, un stagiaire aux moyens réduits doit être évalué sur :",
+    options: ["La reproduction exacte du modèle fourni", "La cohérence avec ses moyens réels", "Le nombre de réseaux sociaux utilisés", "Le budget total dépensé"],
+    answer: "La cohérence avec ses moyens réels", points: 2 },
+  { id: "q060", type: "mcq", text: "Un profil de spectateur construit avec des catégories abstraites (ex. « femme, 25-35 ans ») est :",
+    options: ["La bonne méthode recommandée", "À éviter, au profit de détails concrets et sensoriels", "Obligatoire pour toute plateforme", "Réservé aux gros budgets"],
+    answer: "À éviter, au profit de détails concrets et sensoriels", points: 2 },
+
+  // --- Compléments Séquence 1.1 ---
+  { id: "q061", type: "mcq", text: "Un film vu par peu de spectateurs mais qui change une pratique dans un milieu professionnel illustre :",
+    options: ["Une audience forte", "Un impact fort malgré une audience faible", "Un échec de diffusion", "Une erreur de ciblage"],
+    answer: "Un impact fort malgré une audience faible", points: 2 },
+  { id: "q062", type: "mcq", text: "Le comptage des demandes de projection-débat reçues après la sortie relève de quelle démarche ?",
+    options: ["Observation de l'impact", "Calcul du budget", "Négociation contractuelle", "Sous-titrage"],
+    answer: "Observation de l'impact", points: 1 },
+  { id: "q063", type: "text", text: "Citez un type d'impact autre que médiatique ou politique, vu en cours.",
+    answer: ["public", "institutionnel", "éducatif"], points: 2 },
+  { id: "q064", type: "mcq", text: "Pourquoi observer l'impact dès la sortie plutôt qu'après coup ?",
+    options: ["Ce n'est pas nécessaire", "Sans outils mis en place tôt, on ne garde que des impressions vagues", "La loi l'exige", "Cela coûte moins cher"],
+    answer: "Sans outils mis en place tôt, on ne garde que des impressions vagues", points: 2 },
+
+  // --- Compléments Séquence 1.2 ---
+  { id: "q065", type: "mcq", text: "Un avis qui compare un film à d'autres sorties récentes relève du niveau de lecture :",
+    options: ["Esthétique", "Politique", "Industriel", "Éducatif"],
+    answer: "Industriel", points: 1 },
+  { id: "q066", type: "mcq", text: "Un point relevé par une seule critique isolée doit être considéré comme :",
+    options: ["Un vrai point fort du film", "Un avis, pas une tendance de réception", "Une erreur du journaliste", "Une controverse"],
+    answer: "Un avis, pas une tendance de réception", points: 2 },
+  { id: "q067", type: "text", text: "Dans le circuit d'une controverse vu en cours, qu'est-ce qui déclenche généralement la première étape ?",
+    answer: ["un article", "un post", "un detail precis", "une scene"], points: 2 },
+  { id: "q068", type: "mcq", text: "Une critique élogieuse sur l'image mais très critique sur le point de vue politique du film illustre :",
+    options: ["Une erreur d'analyse", "Le mélange fréquent des niveaux de lecture dans un même article", "Un cas impossible", "Une controverse automatique"],
+    answer: "Le mélange fréquent des niveaux de lecture dans un même article", points: 2 },
+
+  // --- Compléments Séquence 1.3 ---
+  { id: "q069", type: "mcq", text: "Un documentaire au dispositif singulier et au fort potentiel critique est plutôt adapté à :",
+    options: ["TV grand public", "Festival / salle", "Plateforme FAST uniquement", "Aucun circuit"],
+    answer: "Festival / salle", points: 1 },
+  { id: "q070", type: "text", text: "Citez un des 3 grands circuits de diffusion vus en cours (autre que festival).",
+    answer: ["television", "tv", "plateforme", "plateformes"], points: 2 },
+  { id: "q071", type: "mcq", text: "Un même documentaire peut-il emprunter plusieurs circuits de diffusion ?",
+    options: ["Non, un seul circuit est autorisé", "Oui, dans un ordre réfléchi", "Seulement s'il gagne un prix", "Seulement pour les films courts"],
+    answer: "Oui, dans un ordre réfléchi", points: 1 },
+
+  // --- Compléments Séquence 1.4 ---
+  { id: "q072", type: "mcq", text: "Le modèle de profil type vu en cours comporte combien de questions ?",
+    options: ["3", "6", "9", "12"],
+    answer: "6", points: 1 },
+  { id: "q073", type: "text", text: "Dans le modèle de profil, que doit-on chercher à formuler à la fin (après avoir vu le film) ?",
+    answer: ["une phrase", "phrase apres", "reaction", "ce qu'il dirait"], points: 2 },
+  { id: "q074", type: "mcq", text: "Préciser un public prioritaire signifie-t-il renoncer à toucher un public plus large ensuite ?",
+    options: ["Oui, définitivement", "Non, ce n'est pas incompatible", "Oui, mais seulement pour les plateformes", "La question ne se pose pas"],
+    answer: "Non, ce n'est pas incompatible", points: 2 },
+
+  // --- Compléments Séquence 1.5 ---
+  { id: "q075", type: "mcq", text: "Une première « nationale » désigne :",
+    options: ["La première projection mondiale du film", "La première fois qu'un film est montré dans un pays donné", "La première critique publiée", "La première vente internationale"],
+    answer: "La première fois qu'un film est montré dans un pays donné", points: 1 },
+  { id: "q076", type: "mcq", text: "Dans le circuit hiérarchisé vu en cours, les festivals régionaux arrivent :",
+    options: ["En premier, avant tout", "En dernier, après les autres étapes", "Jamais dans un circuit organisé", "Uniquement s'il n'y a pas de festival de lancement"],
+    answer: "En dernier, après les autres étapes", points: 2 },
+  { id: "q077", type: "text", text: "Quel mot désigne la date limite de dépôt d'un dossier à un festival ?",
+    answer: ["deadline"], points: 1 },
+
+  // --- Compléments Séquence 2.1 ---
+  { id: "q078", type: "mcq", text: "Une chaîne thématique (histoire, nature...) cherche en général :",
+    options: ["Un public le plus large possible sans ciblage", "Des documentaires rares ou exclusifs pour un public déjà ciblé", "Uniquement des films internationaux", "Des films sans aucune ligne éditoriale"],
+    answer: "Des documentaires rares ou exclusifs pour un public déjà ciblé", points: 2 },
+  { id: "q079", type: "mcq", text: "Un modèle de plateforme gratuit, sans publicité, souvent institutionnel, s'appelle :",
+    options: ["FVOD", "SVOD", "TVOD", "AVOD"],
+    answer: "FVOD", points: 1 },
+  { id: "q080", type: "text", text: "Que risque un film livré en retard par rapport à sa date de PAD prévue ?",
+    answer: ["perdre la date de diffusion", "retard de diffusion", "perte de la date"], points: 2 },
+
+  // --- Compléments Séquence 2.2 ---
+  { id: "q081", type: "mcq", text: "Un mandat de distribution donne à un distributeur le droit de :",
+    options: ["Réaliser le film", "Faire circuler le film", "Financer intégralement le film", "Modifier le montage sans accord"],
+    answer: "Faire circuler le film", points: 1 },
+  { id: "q082", type: "mcq", text: "Face à un distributeur, quel angle de présentation privilégier selon le cours ?",
+    options: ["Le dispositif artistique uniquement", "Le public visé et le potentiel de circulation", "Le prix de fabrication du film", "La biographie complète du réalisateur"],
+    answer: "Le public visé et le potentiel de circulation", points: 2 },
+  { id: "q083", type: "text", text: "Citez un élément (parmi territoire, durée, exclusivité, commission) qu'un mandat de distribution doit préciser.",
+    answer: ["territoire", "durée", "duree", "exclusivité", "exclusivite", "commission"], points: 1 },
+
+  // --- Compléments Séquence 2.3 ---
+  { id: "q084", type: "mcq", text: "Le dossier de presse et le dossier artistique (pour les financeurs) sont :",
+    options: ["Le même document", "Deux documents à ne jamais mélanger", "Interchangeables selon le contexte", "Réservés aux gros budgets"],
+    answer: "Deux documents à ne jamais mélanger", points: 2 },
+  { id: "q085", type: "text", text: "Citez un élément attendu dans la fiche technique d'un dossier de presse.",
+    answer: ["durée", "duree", "format", "langue", "pays", "année", "annee"], points: 1 },
+  { id: "q086", type: "mcq", text: "Pourquoi rendre un dossier de presse bilingue si le film a une ambition internationale ?",
+    options: ["C'est obligatoire par la loi", "Pour être compris par des journalistes étrangers", "Cela n'a aucune utilité", "Seulement pour les films primés"],
+    answer: "Pour être compris par des journalistes étrangers", points: 2 },
+
+  // --- Compléments Séquence 2.4 ---
+  { id: "q087", type: "mcq", text: "Une bande-annonce, contrairement à un teaser, est faite :",
+    options: ["Avant le tournage", "Quand le film est presque fini", "Uniquement après un festival", "Jamais avant la sortie"],
+    answer: "Quand le film est presque fini", points: 1 },
+  { id: "q088", type: "mcq", text: "Un bon teaser doit :",
+    options: ["Tout expliquer du film", "Créer une attente sans tout dévoiler", "Durer plus de 5 minutes", "Éviter toute musique"],
+    answer: "Créer une attente sans tout dévoiler", points: 1 },
+
+  // --- Compléments Séquence 2.5 ---
+  { id: "q089", type: "text", text: "Citez un des 4 outils de communication vus en cours.",
+    answer: ["réseaux sociaux", "reseaux sociaux", "mailing", "relais", "site web", "blog"], points: 1 },
+  { id: "q090", type: "mcq", text: "Un mailing, dans une stratégie de communication, désigne :",
+    options: ["Une affiche papier", "Une liste de contacts presse/partenaires à qui envoyer des informations", "Un type de plateforme", "Un format de teaser"],
+    answer: "Une liste de contacts presse/partenaires à qui envoyer des informations", points: 1 },
+  { id: "q091", type: "mcq", text: "Un relais, dans une stratégie de communication, est :",
+    options: ["Un logiciel de montage", "Une structure ou personne qui aide à relayer le film à son public", "Un type de contrat", "Une deadline festival"],
+    answer: "Une structure ou personne qui aide à relayer le film à son public", points: 1 },
+
+  // --- Compléments Séquence 2.6 ---
+  { id: "q092", type: "mcq", text: "L'atelier de relecture collective porte sur quel document produit plus tôt dans le module ?",
+    options: ["Le budget", "Le dossier de presse", "Le contrat de distribution", "Le plan de financement"],
+    answer: "Le dossier de presse", points: 1 },
+  { id: "q093", type: "mcq", text: "Intégrer une critique reçue en atelier signifie :",
+    options: ["Suivre chaque avis à la lettre", "Distinguer un point de méthode répété d'un avis isolé", "Ignorer systématiquement les retours", "Refaire tout le dossier de zéro"],
+    answer: "Distinguer un point de méthode répété d'un avis isolé", points: 2 },
+
+  // --- Compléments Séquence 2.7 ---
+  { id: "q094", type: "mcq", text: "Dans un Q&A après projection, une bonne pratique est de :",
+    options: ["Répondre sans reformuler la question", "Reformuler la question avant d'y répondre", "Ignorer les questions difficiles", "Limiter le temps à 30 secondes"],
+    answer: "Reformuler la question avant d'y répondre", points: 2 },
+  { id: "q095", type: "text", text: "Combien de messages clés le cours recommande-t-il de préparer avant une interview ?",
+    answer: ["3", "trois"], points: 1 },
+  { id: "q096", type: "mcq", text: "Une question hostile en interview doit être perçue comme :",
+    options: ["Une attaque personnelle à éviter", "Une question méritant une réponse posée", "Une raison de mettre fin à l'échange", "Un signe d'échec du film"],
+    answer: "Une question méritant une réponse posée", points: 2 },
+
+  // --- Compléments Séquence 2.8 ---
+  { id: "q097", type: "mcq", text: "Un embargo presse signifie que les journalistes :",
+    options: ["Ne reçoivent jamais le dossier de presse", "Peuvent préparer leur article mais ne publient qu'après une date précise", "Doivent payer pour accéder au film", "Publient immédiatement sans contrainte"],
+    answer: "Peuvent préparer leur article mais ne publient qu'après une date précise", points: 2 },
+  { id: "q098", type: "mcq", text: "Dans l'ordre type d'une stratégie échelonnée, que vient faire la campagne presse ?",
+    options: ["Avant la première festival", "Après la première festival, à partir de cette visibilité", "En même temps que le tournage", "Après les projections non-theatrical uniquement"],
+    answer: "Après la première festival, à partir de cette visibilité", points: 2 },
+
+  // --- Compléments Séquence 2.9 ---
+  { id: "q099", type: "mcq", text: "Une spotting list sert à :",
+    options: ["Calculer le budget du film", "Faciliter la traduction en listant les dialogues avec minutage", "Trouver un distributeur", "Fixer le prix de vente international"],
+    answer: "Faciliter la traduction en listant les dialogues avec minutage", points: 2 },
+  { id: "q100", type: "mcq", text: "Une version PAD TV et une version DCP salle sont deux exemples de :",
+    options: ["Contrats différents", "Versions différentes d'un même master", "Erreurs à éviter", "Titres alternatifs du film"],
+    answer: "Versions différentes d'un même master", points: 2 },
+  { id: "q101", type: "text", text: "Quel type de professionnel vend, pays par pays, différents types de droits sur un film ?",
+    answer: ["vendeur international", "sales agent"], points: 2 },
+
+  // --- Compléments Séquence 2.10 ---
+  { id: "q102", type: "mcq", text: "Fixer son prix plancher avant un rendez-vous permet de :",
+    options: ["Décider dans l'urgence", "Éviter de décider sous pression pendant la négociation", "Garantir d'obtenir plus que demandé", "Éviter toute négociation"],
+    answer: "Éviter de décider sous pression pendant la négociation", points: 2 },
+  { id: "q103", type: "mcq", text: "Le calendrier de livraison, dans une négociation, est en général :",
+    options: ["Jamais négociable", "Négociable", "Fixé uniquement par la loi", "Non concerné par la négociation"],
+    answer: "Négociable", points: 1 },
+  { id: "q104", type: "text", text: "Citez un exemple d'argument de valeur cité en cours (accès exclusif, reconnaissance déjà reçue, ou actualité du sujet).",
+    answer: ["accès exclusif", "acces exclusif", "reconnaissance", "actualité", "actualite"], points: 2 },
+
+  // --- Compléments Séquence 2.11 ---
+  { id: "q105", type: "mcq", text: "Le temps de consolidation individuelle sert à :",
+    options: ["Apprendre un nouveau cours", "Reprendre et mettre à jour les livrables déjà produits", "Passer le QCM final", "Rencontrer un vrai diffuseur"],
+    answer: "Reprendre et mettre à jour les livrables déjà produits", points: 1 },
+  { id: "q106", type: "mcq", text: "Pendant ce temps autonome, les gabarits déjà utilisés peuvent être :",
+    options: ["Interdits de réutilisation", "Repris librement pour gagner du temps", "Utilisés uniquement par le formateur", "Remplacés obligatoirement"],
+    answer: "Repris librement pour gagner du temps", points: 1 },
+
+  // --- Compléments Séquence 2.12 ---
+  { id: "q107", type: "mcq", text: "Un tableau décisionnel compare généralement deux stratégies sur des critères comme :",
+    options: ["Coût, délai, public touché, risque", "Uniquement la couleur de l'affiche", "Le nombre de réseaux sociaux", "La météo prévue"],
+    answer: "Coût, délai, public touché, risque", points: 2 },
+  { id: "q108", type: "mcq", text: "Comparer deux stratégies selon les mêmes critères permet de :",
+    options: ["Décider au feeling", "Décider plus objectivement", "Éviter toute décision", "Choisir automatiquement la moins chère"],
+    answer: "Décider plus objectivement", points: 1 },
+
+  // --- Compléments Séquence 2.13 ---
+  { id: "q109", type: "mcq", text: "« Le distributeur a envoyé le film à 5 festivals » relève de :",
+    options: ["La diffusion", "La distribution", "L'exploitation", "Le holdback"],
+    answer: "La distribution", points: 1 },
+  { id: "q110", type: "mcq", text: "Une exclusivité signifie que :",
+    options: ["Plusieurs distributeurs peuvent exploiter le film en même temps", "Un seul diffuseur ou distributeur a le droit d'exploiter sur le territoire donné", "Le film ne peut jamais être exploité", "Le contrat n'a pas de territoire défini"],
+    answer: "Un seul diffuseur ou distributeur a le droit d'exploiter sur le territoire donné", points: 2 },
+  { id: "q111", type: "text", text: "Quel mot désigne la zone géographique où un contrat de diffusion s'applique ?",
+    answer: ["territoire"], points: 1 },
+
+  // --- Compléments Séquence 2.14 ---
+  { id: "q112", type: "mcq", text: "Avant l'envoi d'un dossier à un festival ou diffuseur, il faut vérifier en priorité :",
+    options: ["Le bon destinataire et le bon fichier joint", "Le nombre de vues sur les réseaux", "La couleur du logo", "Le prix du billet d'avion"],
+    answer: "Le bon destinataire et le bon fichier joint", points: 1 },
+  { id: "q113", type: "mcq", text: "Pourquoi consacrer une séance entière à la finalisation des supports ?",
+    options: ["Ce n'est pas nécessaire", "Une dernière relecture change souvent beaucoup de choses avant un envoi réel", "C'est une formalité sans intérêt", "Seuls les gros projets en ont besoin"],
+    answer: "Une dernière relecture change souvent beaucoup de choses avant un envoi réel", points: 2 },
+
+  // --- Compléments Séquence 2.15 ---
+  { id: "q114", type: "mcq", text: "Un rendez-vous individuel avec un diffuseur permet, contrairement à un pitch collectif :",
+    options: ["De réciter un texte appris sans interaction", "Un échange plus direct avec des questions imprévues", "D'éviter toute question", "De ne jamais négocier"],
+    answer: "Un échange plus direct avec des questions imprévues", points: 2 },
+  { id: "q115", type: "mcq", text: "Pour se préparer à un rendez-vous individuel, le cours recommande de s'appuyer sur :",
+    options: ["Un texte à réciter mot pour mot", "Son pitch, ses arguments de valeur, ses réponses aux objections probables", "Un silence total en attendant les questions", "Aucune préparation, il faut improviser"],
+    answer: "Son pitch, ses arguments de valeur, ses réponses aux objections probables", points: 2 },
+
+  // --- Compléments Séquence 2.16 ---
+  { id: "q116", type: "mcq", text: "Le QCM final du module couvre :",
+    options: ["Uniquement la première partie", "Les deux parties du module", "Uniquement les exercices pratiques", "Aucune des séquences vues"],
+    answer: "Les deux parties du module", points: 1 },
+  { id: "q117", type: "mcq", text: "Un plan d'action individuel efficace doit être :",
+    options: ["Vague et général", "Concret, daté, avec des actions précises", "Rédigé par le formateur uniquement", "Identique pour tous les stagiaires"],
+    answer: "Concret, daté, avec des actions précises", points: 2 },
+
+  // --- Questions transversales supplémentaires ---
+  { id: "q118", type: "text", text: "Scénario : votre film obtient une première dans un grand festival. Selon le cours, quelle étape peut alors démarrer juste après ?",
+    answer: ["campagne presse", "presse", "communication presse"], points: 3 },
+  { id: "q119", type: "mcq", text: "Un documentaire tourné en France mais destiné à un festival international doit prévoir en priorité :",
+    options: ["Un doublage en 5 langues", "Des sous-titres anglais", "Une version muette", "Aucune adaptation"],
+    answer: "Des sous-titres anglais", points: 2 },
+  { id: "q120", type: "mcq", text: "Selon le cours, la reconnaissance obtenue dans un premier festival peut :",
+    options: ["N'avoir aucun effet sur la suite", "Ouvrir des portes pour la suite du circuit (autres festivals, presse, diffuseurs)", "Empêcher toute autre sélection", "Réduire les chances en télévision"],
+    answer: "Ouvrir des portes pour la suite du circuit (autres festivals, presse, diffuseurs)", points: 2 },
+  { id: "q121", type: "text", text: "Scénario : vous devez choisir entre publier votre teaser sur les réseaux sociaux ou l'envoyer par mailing presse sous embargo. Quel canal choisir pour une annonce publique large ?",
+    answer: ["réseaux sociaux", "reseaux sociaux", "réseaux"], points: 2 },
+  { id: "q122", type: "mcq", text: "Un dossier de presse et un plan de communication sont-ils le même document ?",
+    options: ["Oui, toujours", "Non, ce sont deux documents différents", "Oui, mais seulement pour les gros projets", "La question ne se pose pas"],
+    answer: "Non, ce sont deux documents différents", points: 2 },
+  { id: "q123", type: "mcq", text: "Face à un producteur qui insiste sur le dispositif de tournage, il vaut mieux :",
+    options: ["Parler uniquement de chiffres de vente", "Développer le désir de film et les choix artistiques", "Refuser de répondre", "Changer immédiatement de sujet"],
+    answer: "Développer le désir de film et les choix artistiques", points: 2 },
+  { id: "q124", type: "mcq", text: "Selon le cours, un stagiaire qui change tout son dossier à chaque retour reçu risque :",
+    options: ["D'obtenir un meilleur dossier à coup sûr", "De finir avec un dossier moins cohérent qu'au départ", "De gagner du temps", "De ne rien risquer"],
+    answer: "De finir avec un dossier moins cohérent qu'au départ", points: 2 },
+  { id: "q125", type: "text", text: "Citez le sigle du modèle de plateforme où le public paie un abonnement mensuel.",
+    answer: ["SVOD"], points: 1 },
+  { id: "q126", type: "mcq", text: "Publier un contenu presse et un contenu grand public au même moment, sans les distinguer, pose un problème de :",
+    options: ["Budget", "Embargo et de coordination presse/public", "Sous-titrage", "Droit moral"],
+    answer: "Embargo et de coordination presse/public", points: 2 },
+  { id: "q127", type: "mcq", text: "Selon le cours, la commission d'un distributeur est en général :",
+    options: ["Fixe et jamais indiquée dans le contrat", "Un pourcentage précisé dans le mandat de distribution", "Toujours nulle pour les documentaires", "Payée par le diffuseur uniquement"],
+    answer: "Un pourcentage précisé dans le mandat de distribution", points: 2 },
+  { id: "q128", type: "mcq", text: "Un plan de financement (vu en lien avec les livrables du module) doit surtout être :",
+    options: ["Impressionnant même s'il est irréaliste", "Réaliste et cohérent avec les moyens du projet", "Rédigé après la sortie du film", "Identique pour tous les projets"],
+    answer: "Réaliste et cohérent avec les moyens du projet", points: 2 },
+  { id: "q129", type: "mcq", text: "Selon le cours, une bonne argumentation face à un diffuseur exigeant repose sur :",
+    options: ["Des impressions vagues", "Des faits vérifiables (accès exclusif, reconnaissance, actualité)", "Le silence", "Une pression insistante"],
+    answer: "Des faits vérifiables (accès exclusif, reconnaissance, actualité)", points: 2 },
+  { id: "q130", type: "text", text: "Scénario : votre film est sélectionné dans un festival exigeant une première mondiale, mais vous l'avez déjà publié sur YouTube il y a 3 mois. Que risque votre sélection ?",
+    answer: ["annulation", "annulée", "refus", "perte de la sélection"], points: 3 },
+  { id: "q131", type: "mcq", text: "Un profil de spectateur orienté « plateforme/TV » a tendance à :",
+    options: ["Suivre attentivement les premières en festival", "Découvrir les films par recommandation, regarder en famille ou seul le soir", "Ne jamais regarder de documentaires", "Toujours préférer la salle"],
+    answer: "Découvrir les films par recommandation, regarder en famille ou seul le soir", points: 2 },
+  { id: "q132", type: "mcq", text: "Selon le cours, la reddition de comptes (reporting) dans un mandat de distribution sert à :",
+    options: ["Fixer le prix du film", "Informer régulièrement le producteur des recettes et sommes dues", "Remplacer le contrat", "Éviter toute négociation"],
+    answer: "Informer régulièrement le producteur des recettes et sommes dues", points: 2 },
+  { id: "q133", type: "mcq", text: "Des frais de promotion (P&A) plafonnés dans un contrat de distribution sont plutôt :",
+    options: ["Un mauvais signe", "Un bon signe, qui protège le producteur", "Sans importance", "Illégaux"],
+    answer: "Un bon signe, qui protège le producteur", points: 2 },
+  { id: "q134", type: "text", text: "Citez un canal adapté pour toucher un public plus âgé, attaché à la télévision classique (vu en cours sur les profils par genre).",
+    answer: ["télévision", "television", "tv"], points: 2 },
+  { id: "q135", type: "mcq", text: "Selon le cours, un public jeune très présent sur les réseaux sociaux correspond plutôt à quel genre de documentaire ?",
+    options: ["Documentaire historique", "Documentaire musical ou décalé", "Documentaire institutionnel", "Aucun profil ne varie selon le genre"],
+    answer: "Documentaire musical ou décalé", points: 2 },
+  { id: "q136", type: "mcq", text: "Selon le cours, la vie d'un documentaire après sa sortie :",
+    options: ["S'arrête toujours à la première diffusion", "Peut durer plusieurs années (festivals, ventes, projections, ressorties)", "Ne concerne que le producteur", "Est interdite après 6 mois"],
+    answer: "Peut durer plusieurs années (festivals, ventes, projections, ressorties)", points: 2 },
+  { id: "q137", type: "mcq", text: "Un stagiaire qui prépare 10 arguments vagues plutôt que 3 arguments solides risque, selon le cours, de :",
+    options: ["Convaincre plus facilement", "Diluer son message et perdre en clarté", "Gagner automatiquement la négociation", "Éviter toute question difficile"],
+    answer: "Diluer son message et perdre en clarté", points: 2 },
+  { id: "q138", type: "text", text: "Quel est le nom du document qui décrit, projet par projet, un spectateur imaginaire mais réaliste ?",
+    answer: ["profil type", "persona", "profil de spectateur"], points: 2 },
+  { id: "q139", type: "mcq", text: "Selon le cours, la meilleure façon de choisir son public prioritaire est de :",
+    options: ["Viser tout le monde en même temps", "Répondre à des questions concrètes sur un spectateur précis", "Copier le public d'un autre film", "Laisser le diffuseur décider seul"],
+    answer: "Répondre à des questions concrètes sur un spectateur précis", points: 2 },
+  { id: "q140", type: "mcq", text: "Selon le cours, un rétroplanning et un calendrier éditorial sont-ils le même outil ?",
+    options: ["Oui, exactement identiques", "Non : le rétroplanning articule surtout festival/presse/projections, le calendrier couvre toute la communication", "Oui, mais réservés aux gros budgets", "Non, ce sont deux contrats"],
+    answer: "Non : le rétroplanning articule surtout festival/presse/projections, le calendrier couvre toute la communication", points: 3 },
+];

@@ -1,7 +1,11 @@
 // ============================================================
-// CONFIGURATION — à adapter après déploiement du backend
+// CONFIGURATION
 // ============================================================
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_jxJogIs6p4QoJfAoLvla-Gr1Q6Orq-nEsVLsMvDJsRBKW6CFQrSjTtbfqfNSag6i/exec";
+// Le frontend et l'API sont servis depuis le même domaine Cloudflare Pages
+// (fichiers statiques dans docs/, routes API dans functions/api/) : de
+// simples routes REST relatives suffisent, sans URL externe à configurer
+// ni contrainte CORS particulière.
+const API_BASE = "/api";
 
 // ============================================================
 // ÉTAT
@@ -28,30 +32,16 @@ function showScreen(name) {
   });
 }
 
-async function callBackend(params) {
-  // Toutes les requêtes passent en GET, données dans l'URL — voir Code.gs
-  // pour le détail (le POST est parfois converti en GET par une redirection
-  // interne à Google, ce qui cassait l'appel).
-  const url = new URL(APPS_SCRIPT_URL);
-  Object.keys(params).forEach(key => {
-    const value = typeof params[key] === "object" ? JSON.stringify(params[key]) : params[key];
-    url.searchParams.set(key, value);
+async function callBackend(action, payload) {
+  const res = await fetch(`${API_BASE}/${action}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
   });
-
-  const res = await fetch(url.toString(), { method: "GET" });
-  const raw = await res.text();
-  try {
-    return JSON.parse(raw);
-  } catch (e) {
-    // La réponse n'est pas du JSON : on affiche le début du contenu reçu
-    // (souvent une page d'erreur Google) pour pouvoir diagnostiquer vite,
-    // plutôt que le message générique "unexpected character..." du navigateur.
-    const apercu = raw.slice(0, 200).replace(/\s+/g, " ").trim();
-    throw new Error(
-      "Le serveur n'a pas renvoyé de JSON valide. Vérifiez l'URL Apps Script et les " +
-      "droits de déploiement (« Tout le monde »). Début de la réponse reçue : " + apercu
-    );
+  if (!res.ok && res.status >= 500) {
+    throw new Error(`Le serveur a répondu une erreur (${res.status}).`);
   }
+  return res.json();
 }
 
 // ============================================================
@@ -67,7 +57,7 @@ $("btn-start").addEventListener("click", async () => {
   $("btn-start").textContent = "Chargement...";
 
   try {
-    const res = await callBackend({ action: "start", nom });
+    const res = await callBackend("start", { nom });
     if (res.status !== "ok") throw new Error(res.message || "Erreur au démarrage.");
 
     state.token = res.token;
@@ -174,7 +164,7 @@ async function submitQuiz(auto) {
   clearInterval(state.timerInterval);
 
   try {
-    const res = await callBackend({ action: "submit", token: state.token, answers: state.answers });
+    const res = await callBackend("submit", { token: state.token, answers: state.answers });
     if (res.status !== "ok") throw new Error(res.message || "Erreur lors de l'envoi.");
     $("done-message").textContent = (auto ? "Temps écoulé — " : "") + res.message;
     showScreen("done");
@@ -195,7 +185,7 @@ async function handleVisibilityLoss() {
   if (state.submitted || !state.token || state.current === undefined) return;
   if (document.hidden) {
     try {
-      const res = await callBackend({ action: "violation", token: state.token });
+      const res = await callBackend("violation", { token: state.token });
       if (res.status === "ok") {
         state.questions = res.questions;
         state.answers = {};

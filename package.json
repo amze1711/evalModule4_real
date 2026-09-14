@@ -1,0 +1,13 @@
+{
+  "name": "qcm-module4",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Évaluation QCM Module 4 — frontend statique + API Cloudflare Pages Functions",
+  "scripts": {
+    "dev": "wrangler pages dev docs --kv QCM_KV --compatibility-date=2024-11-01",
+    "deploy": "wrangler pages deploy docs"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}

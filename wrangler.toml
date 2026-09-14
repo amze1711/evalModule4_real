@@ -1,0 +1,10 @@
+name = "qcm-module4"
+compatibility_date = "2024-11-01"
+pages_build_output_dir = "docs"
+
+# Espace de stockage clé-valeur Cloudflare KV, utilisé pour les sessions en
+# cours et les résultats enregistrés. Remplacez "id" par l'identifiant réel
+# du namespace KV que vous créez à l'étape 2 du README (Workers & Pages > KV).
+[[kv_namespaces]]
+binding = "QCM_KV"
+id = "REMPLACER_PAR_ID_NAMESPACE_KV"
