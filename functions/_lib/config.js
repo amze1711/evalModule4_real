@@ -1,6 +1,6 @@
 // Réglages généraux de l'évaluation.
 export const NB_QUESTIONS = 40;
-export const DUREE_MAX_MINUTES = 90;
+export const DUREE_MAX_MINUTES = 45;
 
 // Durée de vie d'une session "en cours" dans le stockage KV (en secondes).
 // Largement supérieure à la durée max de l'épreuve, pour laisser une marge
