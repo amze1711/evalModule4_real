@@ -15,7 +15,7 @@ export const QUESTION_BANK = [
   { id: "q002", type: "mcq", text: "Parmi les 5 types d'impact vus en cours, lequel correspond à « mise à l'agenda d'un sujet » ?",
     options: ["Impact médiatique", "Impact éducatif", "Impact politique", "Impact institutionnel"],
     answer: "Impact politique", points: 1 },
-  { id: "q003", type: "text", text: "Citez UNE méthode concrète (vue en cours) pour observer l'impact d'un documentaire après sa sortie.",
+  { id: "q003", type: "text", text: "Votre documentaire vient de sortir en salle. Vous voulez suivre concrètement son impact dans les mois qui suivent. Proposez UNE méthode concrète pour l'observer.",
     answer: ["questionnaire de sortie", "veille presse", "veille réseaux", "comptage des demandes de projection", "témoignages spectateurs"], points: 2 },
   { id: "q004", type: "mcq", text: "La campagne #Unnompourchacun est liée à quel documentaire ?",
     options: ["Demain", "Numéro 387, disparu en Méditerranée", "20 jours à Marioupol", "Free Solo"],
@@ -43,7 +43,7 @@ export const QUESTION_BANK = [
   { id: "q010", type: "mcq", text: "Pourquoi dire que son film « s'adresse à tout le monde » pose un problème ?",
     options: ["C'est interdit par la loi", "Un message pour tout le monde ne parle vraiment à personne", "Ça coûte plus cher en communication", "Ça réduit le nombre de festivals possibles"],
     answer: "Un message pour tout le monde ne parle vraiment à personne", points: 1 },
-  { id: "q011", type: "text", text: "Citez 2 des 6 questions du modèle de profil type vu en cours (ex. « qui est-il », etc.)",
+  { id: "q011", type: "text", text: "Vous devez définir le profil type du spectateur idéal pour votre prochain film. Citez 2 des questions clés à vous poser pour le décrire précisément (modèle vu en cours).",
     answer: ["qui est-il", "habitude", "ce qui le touche", "quand", "où", "attend", "phrase après"], points: 2 },
   { id: "q012", type: "mcq", text: "Dans l'exemple rempli du cours (Camille, 34 ans), quel type de documentaire est concerné ?",
     options: ["Documentaire historique", "Documentaire nature", "Documentaire musical", "Documentaire d'enquête"],
@@ -69,14 +69,14 @@ export const QUESTION_BANK = [
   { id: "q018", type: "mcq", text: "Un modèle gratuit, financé par la publicité, sous forme de chaînes en direct s'appelle :",
     options: ["FVOD", "FAST", "TVOD", "SVOD"],
     answer: "FAST", points: 1 },
-  { id: "q019", type: "text", text: "Citez le sigle du modèle où le public paie une seule fois pour louer ou acheter un film.",
+  { id: "q019", type: "text", text: "Une plateforme propose à ses utilisateurs de payer une seule fois pour louer ou acheter un film, sans abonnement. Quel sigle désigne ce modèle ?",
     answer: ["TVOD"], points: 2 },
 
   // --- Séquence 2.2 : Bons interlocuteurs ---
   { id: "q020", type: "mcq", text: "Qui gère l'argent et l'organisation générale du film ?",
     options: ["Le distributeur", "Le producteur", "Le vendeur international", "Le diffuseur"],
     answer: "Le producteur", points: 1 },
-  { id: "q021", type: "text", text: "Citez 2 des 4 éléments qu'un mandat de distribution doit préciser (vus en cours).",
+  { id: "q021", type: "text", text: "Vous négociez un mandat de distribution pour votre film avec un distributeur. Citez 2 des éléments essentiels que ce mandat doit préciser pour vous protéger.",
     answer: ["territoire", "durée", "exclusivité", "commission"], points: 2 },
   { id: "q022", type: "mcq", text: "Face à un producteur, quel angle de présentation privilégier selon le cours ?",
     options: ["Le potentiel de circulation", "Le désir de film et le dispositif", "Le prix de vente", "Le nombre de festivals visés"],
@@ -86,7 +86,7 @@ export const QUESTION_BANK = [
   { id: "q023", type: "mcq", text: "Un dossier de presse s'adresse en priorité à :",
     options: ["Aux financeurs", "Aux journalistes", "Au grand public uniquement", "Aux acteurs"],
     answer: "Aux journalistes", points: 1 },
-  { id: "q024", type: "text", text: "Citez 3 des 9 parties d'un dossier de presse vues en cours.",
+  { id: "q024", type: "text", text: "Vous préparez le dossier de presse de votre film pour l'envoyer aux journalistes avant sa sortie. Citez 3 des parties indispensables qu'il doit contenir.",
     answer: ["couverture", "fiche technique", "générique", "synopsis", "note d'intention", "note de production", "entretien", "biographie", "filmographie", "visuels", "contacts"], points: 2 },
   { id: "q025", type: "mcq", text: "Quelle est une erreur fréquente citée en cours pour un dossier de presse ?",
     options: ["Mettre trop de contacts", "Mélanger dossier artistique et dossier presse", "Utiliser trop de photos", "Le rendre bilingue"],
@@ -96,7 +96,7 @@ export const QUESTION_BANK = [
   { id: "q026", type: "mcq", text: "Un teaser, contrairement à une bande-annonce :",
     options: ["Doit être fait après la sortie", "Peut être fait avant la fin du montage", "Dure toujours plus de 3 minutes", "Doit tout expliquer du film"],
     answer: "Peut être fait avant la fin du montage", points: 1 },
-  { id: "q027", type: "text", text: "Citez 2 des 7 éléments de structure d'un teaser efficace vus en cours.",
+  { id: "q027", type: "text", text: "Vous montez le teaser de votre film, à diffuser avant la fin du montage complet. Citez 2 des éléments de structure qui le rendront efficace.",
     answer: ["accroche", "situation", "tension", "personnage", "voix", "promesse", "titre", "sélection", "prix"], points: 2 },
 
   // --- Séquence 2.5 : Communication cohérente ---
@@ -129,7 +129,7 @@ export const QUESTION_BANK = [
   { id: "q035", type: "mcq", text: "Un rétroplanning se construit :",
     options: ["En partant d'aujourd'hui et en avançant", "En partant de la date de sortie visée et en remontant", "Au hasard", "Seulement après la sortie"],
     answer: "En partant de la date de sortie visée et en remontant", points: 1 },
-  { id: "q036", type: "text", text: "Comment appelle-t-on l'accord qui interdit aux journalistes de publier avant une date précise ?",
+  { id: "q036", type: "text", text: "Vous envoyez votre dossier de presse aux journalistes une semaine avant la sortie, en leur interdisant de publier avant cette date précise. Comment appelle-t-on cet accord ?",
     answer: ["embargo"], points: 2 },
   { id: "q037", type: "mcq", text: "Dans l'ordre type vu en cours, que vient faire la presse par rapport au festival ?",
     options: ["Avant la première festival", "Après la première festival", "Les deux sont indépendants", "La presse ne dépend jamais du festival"],
@@ -142,7 +142,7 @@ export const QUESTION_BANK = [
   { id: "q039", type: "mcq", text: "Quelle langue de sous-titrage est généralement la première étape vers une circulation internationale ?",
     options: ["Le mandarin", "L'anglais", "L'espagnol", "Aucune, ce n'est jamais nécessaire"],
     answer: "L'anglais", points: 1 },
-  { id: "q040", type: "text", text: "Comment appelle-t-on la liste des dialogues avec minutage, qui facilite la traduction ?",
+  { id: "q040", type: "text", text: "Vous faites traduire les dialogues de votre film pour l'export international, et voulez faciliter le travail du traducteur en indiquant le minutage exact de chaque réplique. Comment appelle-t-on ce document ?",
     answer: ["spotting list"], points: 2 },
   { id: "q041", type: "mcq", text: "Distribution nationale et ventes internationales relèvent de :",
     options: ["Un seul et même contrat", "Deux contrats différents", "Aucun contrat n'est nécessaire", "Un contrat oral suffit"],
@@ -152,7 +152,7 @@ export const QUESTION_BANK = [
   { id: "q042", type: "mcq", text: "Lequel de ces éléments n'est JAMAIS négociable selon le cours ?",
     options: ["Le montant", "Le calendrier de livraison", "Le droit moral", "Certains droits secondaires"],
     answer: "Le droit moral", points: 2 },
-  { id: "q043", type: "text", text: "Comment appelle-t-on le montant minimum en dessous duquel on refuse d'aller en négociation ?",
+  { id: "q043", type: "text", text: "Avant un rendez-vous de négociation avec un diffuseur, vous fixez à l'avance le montant minimum en dessous duquel vous refuserez d'aller, pour ne pas décider sous pression. Comment appelle-t-on ce montant ?",
     answer: ["prix plancher"], points: 2 },
   { id: "q044", type: "mcq", text: "Un bon argument de valeur doit s'appuyer sur :",
     options: ["Une conviction personnelle", "Un fait vérifiable", "Une intuition", "Une comparaison avec un autre auteur"],
@@ -170,7 +170,7 @@ export const QUESTION_BANK = [
   { id: "q047", type: "mcq", text: "« Le film est disponible seulement en Belgique et en France, pour 2 ans » relève de :",
     options: ["La diffusion", "La distribution", "L'exploitation", "Aucun des trois"],
     answer: "L'exploitation", points: 1 },
-  { id: "q048", type: "text", text: "Comment appelle-t-on la période où un film ne peut pas être montré ailleurs, pour protéger une exclusivité ?",
+  { id: "q048", type: "text", text: "Un diffuseur exige que votre film ne soit montré nulle part ailleurs pendant une période donnée, pour protéger son exclusivité. Comment appelle-t-on cette période ?",
     answer: ["holdback"], points: 2 },
   { id: "q049", type: "mcq", text: "Le territoire, dans un contrat, désigne :",
     options: ["La durée du contrat", "La zone géographique où le contrat s'applique", "Le montant payé", "Le nom du distributeur"],
@@ -187,7 +187,7 @@ export const QUESTION_BANK = [
     answer: "Plus interactif, avec des questions imprévues", points: 2 },
 
   // --- Séquence 2.16 : Bilan ---
-  { id: "q052", type: "text", text: "Citez un des éléments qu'un plan d'action individuel doit contenir selon le cours.",
+  { id: "q052", type: "text", text: "Vous rédigez votre plan d'action personnel pour la suite de votre projet de diffusion. Citez un des éléments qu'il doit impérativement contenir pour être utile.",
     answer: ["action concrète", "échéance", "date", "prochaines actions"], points: 2 },
 
   // --- Questions transversales / scénarios complets ---
@@ -204,7 +204,7 @@ export const QUESTION_BANK = [
   { id: "q057", type: "mcq", text: "La différence principale entre un producteur et un distributeur est :",
     options: ["Le producteur gère l'argent et l'organisation, le distributeur fait circuler le film une fois prêt", "Ce sont deux noms pour le même métier", "Le distributeur intervient avant le producteur", "Le producteur n'intervient jamais avant la sortie"],
     answer: "Le producteur gère l'argent et l'organisation, le distributeur fait circuler le film une fois prêt", points: 2 },
-  { id: "q058", type: "text", text: "Citez le nom du document qui réunit les outils et la stratégie de communication d'un projet.",
+  { id: "q058", type: "text", text: "Vous voulez centraliser dans un seul document les outils et la stratégie de communication de votre film, pour le partager avec votre équipe. Comment s'appelle ce document ?",
     answer: ["plan de communication"], points: 2 },
   { id: "q059", type: "mcq", text: "Selon le cours, un stagiaire aux moyens réduits doit être évalué sur :",
     options: ["La reproduction exacte du modèle fourni", "La cohérence avec ses moyens réels", "Le nombre de réseaux sociaux utilisés", "Le budget total dépensé"],
@@ -220,7 +220,7 @@ export const QUESTION_BANK = [
   { id: "q062", type: "mcq", text: "Le comptage des demandes de projection-débat reçues après la sortie relève de quelle démarche ?",
     options: ["Observation de l'impact", "Calcul du budget", "Négociation contractuelle", "Sous-titrage"],
     answer: "Observation de l'impact", points: 1 },
-  { id: "q063", type: "text", text: "Citez un type d'impact autre que médiatique ou politique, vu en cours.",
+  { id: "q063", type: "text", text: "Votre film change durablement une pratique professionnelle dans un secteur, sans faire beaucoup de bruit dans les médias ni en politique. Citez un autre type d'impact que cela peut illustrer.",
     answer: ["public", "institutionnel", "éducatif"], points: 2 },
   { id: "q064", type: "mcq", text: "Pourquoi observer l'impact dès la sortie plutôt qu'après coup ?",
     options: ["Ce n'est pas nécessaire", "Sans outils mis en place tôt, on ne garde que des impressions vagues", "La loi l'exige", "Cela coûte moins cher"],
@@ -243,7 +243,7 @@ export const QUESTION_BANK = [
   { id: "q069", type: "mcq", text: "Un documentaire au dispositif singulier et au fort potentiel critique est plutôt adapté à :",
     options: ["TV grand public", "Festival / salle", "Plateforme FAST uniquement", "Aucun circuit"],
     answer: "Festival / salle", points: 1 },
-  { id: "q070", type: "text", text: "Citez un des 3 grands circuits de diffusion vus en cours (autre que festival).",
+  { id: "q070", type: "text", text: "Votre film a déjà fait sa tournée de festivals. Citez un autre grand circuit de diffusion (hors festival) que vous pourriez viser ensuite.",
     answer: ["television", "tv", "plateforme", "plateformes"], points: 2 },
   { id: "q071", type: "mcq", text: "Un même documentaire peut-il emprunter plusieurs circuits de diffusion ?",
     options: ["Non, un seul circuit est autorisé", "Oui, dans un ordre réfléchi", "Seulement s'il gagne un prix", "Seulement pour les films courts"],
@@ -266,7 +266,7 @@ export const QUESTION_BANK = [
   { id: "q076", type: "mcq", text: "Dans le circuit hiérarchisé vu en cours, les festivals régionaux arrivent :",
     options: ["En premier, avant tout", "En dernier, après les autres étapes", "Jamais dans un circuit organisé", "Uniquement s'il n'y a pas de festival de lancement"],
     answer: "En dernier, après les autres étapes", points: 2 },
-  { id: "q077", type: "text", text: "Quel mot désigne la date limite de dépôt d'un dossier à un festival ?",
+  { id: "q077", type: "text", text: "Un festival annonce que les dossiers doivent être envoyés au plus tard le 15 mars. Quel mot désigne cette date limite ?",
     answer: ["deadline"], points: 1 },
 
   // --- Compléments Séquence 2.1 ---
@@ -286,14 +286,14 @@ export const QUESTION_BANK = [
   { id: "q082", type: "mcq", text: "Face à un distributeur, quel angle de présentation privilégier selon le cours ?",
     options: ["Le dispositif artistique uniquement", "Le public visé et le potentiel de circulation", "Le prix de fabrication du film", "La biographie complète du réalisateur"],
     answer: "Le public visé et le potentiel de circulation", points: 2 },
-  { id: "q083", type: "text", text: "Citez un élément (parmi territoire, durée, exclusivité, commission) qu'un mandat de distribution doit préciser.",
+  { id: "q083", type: "text", text: "Avant de signer un mandat de distribution, votre avocat vous demande de vérifier qu'un élément clé y figure bien. Citez-en un (territoire, durée, exclusivité ou commission).",
     answer: ["territoire", "durée", "duree", "exclusivité", "exclusivite", "commission"], points: 1 },
 
   // --- Compléments Séquence 2.3 ---
   { id: "q084", type: "mcq", text: "Le dossier de presse et le dossier artistique (pour les financeurs) sont :",
     options: ["Le même document", "Deux documents à ne jamais mélanger", "Interchangeables selon le contexte", "Réservés aux gros budgets"],
     answer: "Deux documents à ne jamais mélanger", points: 2 },
-  { id: "q085", type: "text", text: "Citez un élément attendu dans la fiche technique d'un dossier de presse.",
+  { id: "q085", type: "text", text: "Un journaliste vous demande la fiche technique de votre film pour son article. Citez un élément qu'elle doit contenir.",
     answer: ["durée", "duree", "format", "langue", "pays", "année", "annee"], points: 1 },
   { id: "q086", type: "mcq", text: "Pourquoi rendre un dossier de presse bilingue si le film a une ambition internationale ?",
     options: ["C'est obligatoire par la loi", "Pour être compris par des journalistes étrangers", "Cela n'a aucune utilité", "Seulement pour les films primés"],
@@ -308,7 +308,7 @@ export const QUESTION_BANK = [
     answer: "Créer une attente sans tout dévoiler", points: 1 },
 
   // --- Compléments Séquence 2.5 ---
-  { id: "q089", type: "text", text: "Citez un des 4 outils de communication vus en cours.",
+  { id: "q089", type: "text", text: "Vous montez le plan de communication de votre film et devez choisir vos outils. Citez un des outils de communication à votre disposition.",
     answer: ["réseaux sociaux", "reseaux sociaux", "mailing", "relais", "site web", "blog"], points: 1 },
   { id: "q090", type: "mcq", text: "Un mailing, dans une stratégie de communication, désigne :",
     options: ["Une affiche papier", "Une liste de contacts presse/partenaires à qui envoyer des informations", "Un type de plateforme", "Un format de teaser"],
@@ -350,7 +350,7 @@ export const QUESTION_BANK = [
   { id: "q100", type: "mcq", text: "Une version PAD TV et une version DCP salle sont deux exemples de :",
     options: ["Contrats différents", "Versions différentes d'un même master", "Erreurs à éviter", "Titres alternatifs du film"],
     answer: "Versions différentes d'un même master", points: 2 },
-  { id: "q101", type: "text", text: "Quel type de professionnel vend, pays par pays, différents types de droits sur un film ?",
+  { id: "q101", type: "text", text: "Vous voulez faire circuler votre film à l'international et avez besoin de quelqu'un capable de vendre, pays par pays, différents types de droits dessus. Quel type de professionnel cherchez-vous ?",
     answer: ["vendeur international", "sales agent"], points: 2 },
 
   // --- Compléments Séquence 2.10 ---
@@ -360,7 +360,7 @@ export const QUESTION_BANK = [
   { id: "q103", type: "mcq", text: "Le calendrier de livraison, dans une négociation, est en général :",
     options: ["Jamais négociable", "Négociable", "Fixé uniquement par la loi", "Non concerné par la négociation"],
     answer: "Négociable", points: 1 },
-  { id: "q104", type: "text", text: "Citez un exemple d'argument de valeur cité en cours (accès exclusif, reconnaissance déjà reçue, ou actualité du sujet).",
+  { id: "q104", type: "text", text: "Face à un diffuseur hésitant, vous devez construire un argument solide pour le convaincre. Citez un type d'argument de valeur sur lequel vous appuyer (accès exclusif, reconnaissance déjà obtenue, ou actualité du sujet).",
     answer: ["accès exclusif", "acces exclusif", "reconnaissance", "actualité", "actualite"], points: 2 },
 
   // --- Compléments Séquence 2.11 ---
@@ -386,7 +386,7 @@ export const QUESTION_BANK = [
   { id: "q110", type: "mcq", text: "Une exclusivité signifie que :",
     options: ["Plusieurs distributeurs peuvent exploiter le film en même temps", "Un seul diffuseur ou distributeur a le droit d'exploiter sur le territoire donné", "Le film ne peut jamais être exploité", "Le contrat n'a pas de territoire défini"],
     answer: "Un seul diffuseur ou distributeur a le droit d'exploiter sur le territoire donné", points: 2 },
-  { id: "q111", type: "text", text: "Quel mot désigne la zone géographique où un contrat de diffusion s'applique ?",
+  { id: "q111", type: "text", text: "Votre contrat avec un diffuseur précise que le film ne peut être exploité qu'en France et en Belgique. Quel mot désigne cette zone géographique ?",
     answer: ["territoire"], points: 1 },
 
   // --- Compléments Séquence 2.14 ---
@@ -433,7 +433,7 @@ export const QUESTION_BANK = [
   { id: "q124", type: "mcq", text: "Selon le cours, un stagiaire qui change tout son dossier à chaque retour reçu risque :",
     options: ["D'obtenir un meilleur dossier à coup sûr", "De finir avec un dossier moins cohérent qu'au départ", "De gagner du temps", "De ne rien risquer"],
     answer: "De finir avec un dossier moins cohérent qu'au départ", points: 2 },
-  { id: "q125", type: "text", text: "Citez le sigle du modèle de plateforme où le public paie un abonnement mensuel.",
+  { id: "q125", type: "text", text: "Une plateforme fait payer un abonnement mensuel à ses utilisateurs pour accéder à tout son catalogue. Quel sigle désigne ce modèle ?",
     answer: ["SVOD"], points: 1 },
   { id: "q126", type: "mcq", text: "Publier un contenu presse et un contenu grand public au même moment, sans les distinguer, pose un problème de :",
     options: ["Budget", "Embargo et de coordination presse/public", "Sous-titrage", "Droit moral"],
@@ -458,7 +458,7 @@ export const QUESTION_BANK = [
   { id: "q133", type: "mcq", text: "Des frais de promotion (P&A) plafonnés dans un contrat de distribution sont plutôt :",
     options: ["Un mauvais signe", "Un bon signe, qui protège le producteur", "Sans importance", "Illégaux"],
     answer: "Un bon signe, qui protège le producteur", points: 2 },
-  { id: "q134", type: "text", text: "Citez un canal adapté pour toucher un public plus âgé, attaché à la télévision classique (vu en cours sur les profils par genre).",
+  { id: "q134", type: "text", text: "Votre film cible un public plus âgé, plutôt fidèle à la télévision classique. Citez un canal adapté pour le toucher efficacement.",
     answer: ["télévision", "television", "tv"], points: 2 },
   { id: "q135", type: "mcq", text: "Selon le cours, un public jeune très présent sur les réseaux sociaux correspond plutôt à quel genre de documentaire ?",
     options: ["Documentaire historique", "Documentaire musical ou décalé", "Documentaire institutionnel", "Aucun profil ne varie selon le genre"],
@@ -469,7 +469,7 @@ export const QUESTION_BANK = [
   { id: "q137", type: "mcq", text: "Un stagiaire qui prépare 10 arguments vagues plutôt que 3 arguments solides risque, selon le cours, de :",
     options: ["Convaincre plus facilement", "Diluer son message et perdre en clarté", "Gagner automatiquement la négociation", "Éviter toute question difficile"],
     answer: "Diluer son message et perdre en clarté", points: 2 },
-  { id: "q138", type: "text", text: "Quel est le nom du document qui décrit, projet par projet, un spectateur imaginaire mais réaliste ?",
+  { id: "q138", type: "text", text: "Pour chaque nouveau projet, vous décrivez un spectateur imaginaire mais réaliste afin de mieux cibler votre communication. Comment appelle-t-on ce document ?",
     answer: ["profil type", "persona", "profil de spectateur"], points: 2 },
   { id: "q139", type: "mcq", text: "Selon le cours, la meilleure façon de choisir son public prioritaire est de :",
     options: ["Viser tout le monde en même temps", "Répondre à des questions concrètes sur un spectateur précis", "Copier le public d'un autre film", "Laisser le diffuseur décider seul"],
