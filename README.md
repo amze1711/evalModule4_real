@@ -1,7 +1,7 @@
 # QCM d'évaluation — Module 4 : Diffusion et distribution du documentaire
 
 Système d'évaluation en ligne : 140 questions en banque, 40 tirées par participant,
-chronomètre de 45 min basé sur l'heure serveur, détection de changement de fenêtre
+chronomètre de 35 min basé sur l'heure serveur, détection de changement de fenêtre
 avec régénération du tirage, enregistrement et notation automatique côté serveur.
 
 ## ⚠️ Limites techniques à connaître avant utilisation
@@ -181,7 +181,7 @@ la section du **haut** ("Runtime variables and secrets").
 1. Ouvrez l'URL du projet (format `https://qcm-module4.<votre-compte>.workers.dev`,
    visible dans le tableau de bord) sur un téléphone.
 2. Entrez un nom test, démarrez l'évaluation. Vérifiez que le chronomètre
-   démarre bien à 0:45:00.
+   démarre bien à 0:35:00.
 3. Répondez à 2-3 questions, puis changez d'application (ou verrouillez
    l'écran) : vérifiez que les réponses sont effacées, qu'un bandeau
    d'avertissement apparaît, et qu'un **nouveau** tirage de questions démarre —
@@ -288,7 +288,7 @@ Après modification, un simple `git push` redéploie automatiquement le site
 
 Dans `functions/_lib/config.js` :
 - `NB_QUESTIONS` : nombre de questions tirées par participant (40 par défaut)
-- `DUREE_MAX_MINUTES` : durée de l'épreuve (45 par défaut)
+- `DUREE_MAX_MINUTES` : durée de l'épreuve (35 par défaut)
 - `SESSION_TTL_SECONDS` : durée de conservation d'une session « en cours » dans
   KV avant expiration automatique (6h par défaut — largement supérieure à la
   durée de l'épreuve, pour laisser une marge en cas de soumission tardive)

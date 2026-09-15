@@ -13,7 +13,7 @@ const API_BASE = "/api";
 let state = {
   token: null,
   startTimeServer: null, // Date ISO renvoyée par le serveur — référence pour le chrono
-  dureeMaxMinutes: 45,
+  dureeMaxMinutes: 35,
   questions: [],
   current: 0,
   answers: {}, // { questionId: valeur }
