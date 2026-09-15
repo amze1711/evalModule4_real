@@ -13,7 +13,7 @@ export default {
     const { pathname } = new URL(request.url);
 
     if (pathname === "/api/health" && request.method === "GET") {
-      return healthGet();
+      return healthGet({ env });
     }
     if (pathname === "/api/start" && request.method === "POST") {
       return startPost({ request, env });

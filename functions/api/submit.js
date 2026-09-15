@@ -47,10 +47,15 @@ export async function onRequestPost({ request, env }) {
     startTime: session.startTime,
     endTime: result.endTime,
   });
-  if (!emailResult.sent) {
-    // L'échec d'envoi d'email ne doit jamais bloquer l'enregistrement du résultat.
-    console.log("Envoi email échoué:", emailResult.reason);
-  }
+  // L'échec d'envoi d'email ne doit jamais bloquer l'enregistrement du résultat
+  // (déjà écrit ci-dessus) ; on note simplement le statut de l'envoi dans le
+  // même enregistrement, consultable dans KV, pour pouvoir diagnostiquer sans
+  // avoir besoin des logs Cloudflare.
+  await env.QCM_KV.put(`result:${body.token}`, JSON.stringify({
+    ...result,
+    emailSent: emailResult.sent,
+    emailDebug: emailResult.sent ? undefined : emailResult.reason,
+  }));
 
   return json({
     status: "ok",
