@@ -27,7 +27,16 @@ export function gradeAnswers(questionIds, answers, bank) {
       correct = accepted.some(a => given.includes(a.toString().trim().toLowerCase()));
     }
     if (correct) score += q.points;
-    detail.push({ id, given: answers[id] || "", correct, points: correct ? q.points : 0, max: q.points });
+    const correctAnswer = Array.isArray(q.answer) ? q.answer.join(" / ") : q.answer;
+    detail.push({
+      id,
+      text: q.text,
+      given: answers[id] || "",
+      correctAnswer,
+      correct,
+      points: correct ? q.points : 0,
+      max: q.points,
+    });
   });
 
   return { score, scoreMax, detail };

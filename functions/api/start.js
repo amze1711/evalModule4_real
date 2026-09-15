@@ -12,6 +12,11 @@ export async function onRequestPost({ request, env }) {
   if (!nom) return json({ status: "error", message: "Nom requis." });
   if (nom.length > 200) return json({ status: "error", message: "Nom trop long." });
 
+  const email = (body.email || "").toString().trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return json({ status: "error", message: "Adresse email invalide." });
+  }
+
   const token = crypto.randomUUID();
   const startTime = new Date();
   const seed = nom + "|" + token;
@@ -19,6 +24,7 @@ export async function onRequestPost({ request, env }) {
 
   const session = {
     nom,
+    email,
     startTime: startTime.toISOString(),
     questionIds,
     violationCount: 0,

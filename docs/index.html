@@ -20,12 +20,15 @@
           <li>40 questions, 1h30 chronométrées</li>
           <li>Restez sur cette page pendant toute la durée</li>
           <li>Changer de fenêtre ou d'application efface vos réponses en cours et régénère un nouveau tirage de questions — le chronomètre, lui, continue</li>
-          <li>Votre note vous sera transmise après validation</li>
+          <li>Le détail de vos réponses vous sera envoyé par email juste après validation</li>
         </ul>
       </div>
 
       <label for="input-nom">Nom et prénom</label>
       <input type="text" id="input-nom" placeholder="Ex. Camille Dubois" autocomplete="name" />
+
+      <label for="input-email">Adresse email</label>
+      <input type="email" id="input-email" placeholder="prenom.nom@exemple.com" autocomplete="email" />
 
       <button id="btn-start" class="btn-primary">Commencer l'évaluation</button>
       <p id="start-error" class="error"></p>
@@ -60,7 +63,7 @@
   <div id="screen-done" class="screen hidden">
     <div class="card">
       <h1>Évaluation envoyée</h1>
-      <p id="done-message">Vos réponses ont été enregistrées. Votre note vous sera communiquée après validation par le formateur.</p>
+      <p id="done-message">Vos réponses ont été enregistrées.</p>
     </div>
   </div>
 

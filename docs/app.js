@@ -47,17 +47,26 @@ async function callBackend(action, payload) {
 // ============================================================
 // DÉMARRAGE
 // ============================================================
+function isValidEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
 $("btn-start").addEventListener("click", async () => {
   const nom = $("input-nom").value.trim();
+  const email = $("input-email").value.trim();
   if (!nom) {
     $("start-error").textContent = "Merci d'indiquer votre nom et prénom.";
+    return;
+  }
+  if (!isValidEmail(email)) {
+    $("start-error").textContent = "Merci d'indiquer une adresse email valide — vos résultats vous y seront envoyés.";
     return;
   }
   $("btn-start").disabled = true;
   $("btn-start").textContent = "Chargement...";
 
   try {
-    const res = await callBackend("start", { nom });
+    const res = await callBackend("start", { nom, email });
     if (res.status !== "ok") throw new Error(res.message || "Erreur au démarrage.");
 
     state.token = res.token;

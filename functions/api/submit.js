@@ -1,7 +1,7 @@
 import { json, readJsonBody } from "../_lib/http.js";
 import { QUESTION_BANK } from "../_lib/questions.js";
 import { gradeAnswers } from "../_lib/grading.js";
-import { sendResultEmail } from "../_lib/email.js";
+import { sendAdminEmail, sendParticipantEmail } from "../_lib/email.js";
 import { SESSION_TTL_SECONDS } from "../_lib/config.js";
 
 export async function onRequestPost({ request, env }) {
@@ -28,6 +28,7 @@ export async function onRequestPost({ request, env }) {
   const result = {
     token: body.token,
     nom: session.nom,
+    email: session.email,
     startTime: session.startTime,
     endTime: endTime.toISOString(),
     dureeMinutes,
@@ -38,7 +39,7 @@ export async function onRequestPost({ request, env }) {
   };
   await env.QCM_KV.put(`result:${body.token}`, JSON.stringify(result));
 
-  const emailResult = await sendResultEmail(env, {
+  const emailParams = {
     nom: session.nom,
     score,
     scoreMax,
@@ -46,19 +47,26 @@ export async function onRequestPost({ request, env }) {
     violationCount: session.violationCount,
     startTime: session.startTime,
     endTime: result.endTime,
-  });
-  // L'échec d'envoi d'email ne doit jamais bloquer l'enregistrement du résultat
-  // (déjà écrit ci-dessus) ; on note simplement le statut de l'envoi dans le
-  // même enregistrement, consultable dans KV, pour pouvoir diagnostiquer sans
-  // avoir besoin des logs Cloudflare.
+    detail,
+  };
+
+  const adminEmailResult = await sendAdminEmail(env, emailParams);
+  const participantEmailResult = await sendParticipantEmail(env, { ...emailParams, to: session.email });
+
+  // L'échec d'un envoi (ou des deux) ne doit jamais bloquer l'enregistrement
+  // du résultat, déjà écrit ci-dessus ; on note simplement le statut de
+  // chaque envoi dans le même enregistrement, consultable dans KV.
   await env.QCM_KV.put(`result:${body.token}`, JSON.stringify({
     ...result,
-    emailSent: emailResult.sent,
-    emailDebug: emailResult.sent ? undefined : emailResult.reason,
+    adminEmailSent: adminEmailResult.sent,
+    adminEmailDebug: adminEmailResult.sent ? undefined : adminEmailResult.reason,
+    participantEmailSent: participantEmailResult.sent,
+    participantEmailDebug: participantEmailResult.sent ? undefined : participantEmailResult.reason,
   }));
 
-  return json({
-    status: "ok",
-    message: "Vos réponses ont été enregistrées. Votre note vous sera communiquée après validation par le formateur.",
-  });
+  const message = participantEmailResult.sent
+    ? `Vos réponses ont été enregistrées. Le détail de votre évaluation vous a été envoyé à ${session.email}.`
+    : "Vos réponses ont été enregistrées. Nous n'avons pas pu vous envoyer le détail par email — contactez le formateur pour l'obtenir.";
+
+  return json({ status: "ok", message });
 }

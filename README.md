@@ -102,10 +102,23 @@ navigateur.
 3. **Important — limite du niveau gratuit sans domaine vérifié** : tant que vous
    n'avez pas vérifié un nom de domaine sur Resend, vous ne pouvez envoyer des
    emails **qu'à l'adresse email utilisée pour créer votre compte Resend**.
-   C'est suffisant pour ce projet : `ADMIN_EMAIL` (l'adresse du formateur qui
-   reçoit chaque résultat) doit être cette même adresse. Si vous avez besoin
-   d'envoyer aussi une copie directement à chaque stagiaire, il faudra vérifier
-   un domaine sur Resend (menu **Domains**, ajout d'enregistrements DNS).
+   `ADMIN_EMAIL` (l'adresse du formateur) fonctionne donc directement.
+4. **Obligatoire pour ce projet — vérifier un domaine** : chaque participant
+   reçoit automatiquement le détail de ses réponses à sa propre adresse email
+   (obligation légale de lui fournir une trace de son évaluation). Comme ces
+   adresses sont différentes de celle du compte Resend, un domaine **doit**
+   être vérifié, sinon l'envoi aux participants échouera systématiquement (le
+   suivi de chaque envoi reste visible sans planter l'appli — voir Étape 7 —
+   mais aucun participant ne recevra rien tant que ce n'est pas fait) :
+   - Menu **Domains** sur Resend > **Add Domain**, indiquez un domaine ou
+     sous-domaine que vous possédez (ex. `formation.mondomaine.fr`).
+   - Resend fournit des enregistrements DNS (SPF, DKIM) à ajouter chez votre
+     hébergeur de domaine. Une fois propagés (quelques minutes à quelques
+     heures), le domaine passe en statut **Vérifié**.
+   - Mettez alors à jour la variable `EMAIL_FROM` (étape 6) avec une adresse
+     `@votredomaine`, par exemple `QCM Module 4 <evaluation@formation.mondomaine.fr>`
+     — un email envoyé depuis `onboarding@resend.dev` (valeur par défaut) reste
+     limité au seul destinataire du compte Resend, domaine vérifié ou non.
 
 ## Étape 4 — Pousser le code sur GitHub
 
@@ -189,6 +202,12 @@ Les résultats sont stockés dans l'espace KV `QCM_KV`, sous des clés
 - Ou avec la CLI Wrangler (voir section développement local ci-dessous) :
   `npx wrangler kv key list --namespace-id=<ID_NAMESPACE>` puis
   `npx wrangler kv key get "result:<token>" --namespace-id=<ID_NAMESPACE>`.
+
+Chaque résultat contient, en plus du score et du détail complet des réponses
+(question, réponse donnée, réponse attendue, correct ou non) : `email` (adresse
+du participant), `adminEmailSent`/`adminEmailDebug` et
+`participantEmailSent`/`participantEmailDebug` — pratique pour vérifier
+rapidement si l'envoi a réussi sans avoir besoin des logs Cloudflare.
 
 ---
 
