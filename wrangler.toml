@@ -15,3 +15,10 @@ binding = "ASSETS"
 [[kv_namespaces]]
 binding = "QCM_KV"
 id = "5a9bc090e00c448585943397e74077da"
+
+# Adresse recevant chaque résultat. Pas un secret (juste une adresse mail de
+# destination) : la mettre ici, dans le code versionné, évite qu'elle
+# disparaisse après un redéploiement, contrairement à une variable ajoutée
+# uniquement dans le tableau de bord Cloudflare.
+[vars]
+ADMIN_EMAIL = "amze.clap@gmail.com"
