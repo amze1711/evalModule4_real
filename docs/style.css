@@ -60,7 +60,8 @@ h1 {
 .rules li { margin-bottom: 4px; }
 
 label { font-size: 13px; font-weight: bold; display: block; margin-bottom: 6px; }
-input[type="text"] {
+input[type="text"],
+input[type="email"] {
   width: 100%;
   padding: 12px;
   font-size: 16px; /* évite le zoom auto iOS */
