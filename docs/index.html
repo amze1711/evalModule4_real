@@ -18,8 +18,8 @@
         <p><strong>Avant de commencer :</strong></p>
         <ul>
           <li>40 questions, 35 min chronométrées</li>
-          <li>Restez sur cette page pendant toute la durée</li>
-          <li>Changer de fenêtre ou d'application efface vos réponses en cours et régénère un nouveau tirage de questions — le chronomètre, lui, continue</li>
+          <li>Le plein écran est obligatoire pour démarrer l'évaluation</li>
+          <li>Changer de fenêtre, d'application ou sortir du plein écran efface vos réponses en cours et régénère un nouveau tirage de questions — le chronomètre, lui, continue</li>
           <li>Le détail de vos réponses vous sera envoyé par email juste après validation</li>
         </ul>
       </div>
@@ -43,7 +43,8 @@
     </div>
 
     <div id="violation-banner" class="violation-banner hidden">
-      ⚠ Changement de fenêtre détecté — réponses effacées, nouveau tirage généré. Le chronomètre continue.
+      <span id="violation-banner-text">⚠ Changement de fenêtre détecté — réponses effacées, nouveau tirage généré. Le chronomètre continue.</span>
+      <button id="btn-refullscreen" class="btn-refullscreen">Revenir en plein écran</button>
     </div>
 
     <div class="card" id="question-card">

@@ -51,6 +51,26 @@ function isValidEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
+// Le plein écran est obligatoire pour démarrer : ça empêche l'écran fractionné
+// (split-screen) au moment du départ, et en sortir pendant l'épreuve est
+// ensuite détecté comme un changement de fenêtre (voir plus bas). Comme
+// toute détection côté navigateur, ça ne verrouille pas réellement l'appareil
+// (rien n'empêche un deuxième écran ou un deuxième appareil) — ça reste de la
+// détection, pas une prévention technique absolue.
+async function requireFullscreen() {
+  if (!document.documentElement.requestFullscreen) {
+    throw new Error("Votre navigateur ne supporte pas le mode plein écran, requis pour cette évaluation.");
+  }
+  try {
+    await document.documentElement.requestFullscreen();
+  } catch (e) {
+    throw new Error("Le plein écran a été refusé ou n'a pas pu être activé. Autorisez-le pour démarrer l'évaluation.");
+  }
+  if (!document.fullscreenElement) {
+    throw new Error("Le plein écran est requis pour démarrer l'évaluation.");
+  }
+}
+
 $("btn-start").addEventListener("click", async () => {
   const nom = $("input-nom").value.trim();
   const email = $("input-email").value.trim();
@@ -66,6 +86,8 @@ $("btn-start").addEventListener("click", async () => {
   $("btn-start").textContent = "Chargement...";
 
   try {
+    await requireFullscreen();
+
     const res = await callBackend("start", { nom, email });
     if (res.status !== "ok") throw new Error(res.message || "Erreur au démarrage.");
 
@@ -75,9 +97,6 @@ $("btn-start").addEventListener("click", async () => {
     state.questions = res.questions;
     state.current = 0;
     state.answers = {};
-
-    // Optionnel : tenter le plein écran (non bloquant si refusé/non supporté)
-    try { document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); } catch (e) {}
 
     showScreen("quiz");
     renderQuestion();
@@ -185,34 +204,60 @@ async function submitQuiz(auto) {
 
 // ============================================================
 // ANTI-TRICHE — détection de perte de focus (changement d'onglet,
-// changement d'application, minimisation). Impossible d'empêcher
-// techniquement le changement de fenêtre depuis une page web ; on
-// détecte donc l'événement et on réagit, sans jamais toucher au
-// chronomètre (qui reste basé sur l'heure de départ serveur).
+// changement d'application, minimisation) ET de sortie du plein écran
+// (notamment pour repérer un écran fractionné / split-screen). Impossible
+// d'empêcher techniquement ces actions depuis une page web — même le plein
+// écran obligatoire au départ ne verrouille pas réellement l'appareil, ni
+// n'empêche un second écran ou un second appareil ; on détecte donc chaque
+// événement et on réagit, sans jamais toucher au chronomètre (qui reste basé
+// sur l'heure de départ serveur).
 // ============================================================
-async function handleVisibilityLoss() {
+// Une même action (ex. sortir du plein écran) peut déclencher plusieurs
+// événements quasi simultanément (fullscreenchange + blur + visibilitychange
+// selon le navigateur) : on ignore les déclenchements rapprochés pour ne
+// compter qu'une seule violation par action réelle.
+let lastViolationAt = 0;
+const VIOLATION_DEDUPE_MS = 1500;
+
+async function handleViolation(reason) {
   if (state.submitted || !state.token || state.current === undefined) return;
-  if (document.hidden) {
-    try {
-      const res = await callBackend("violation", { token: state.token });
-      if (res.status === "ok") {
-        state.questions = res.questions;
-        state.answers = {};
-        state.current = 0;
-        renderQuestion();
-        const banner = $("violation-banner");
-        banner.classList.remove("hidden");
-        setTimeout(() => banner.classList.add("hidden"), 6000);
-      }
-    } catch (e) {
-      // en cas d'échec réseau, on ne bloque pas le stagiaire — le
-      // journal des tentatives reste de toute façon côté serveur.
+  const now = Date.now();
+  if (now - lastViolationAt < VIOLATION_DEDUPE_MS) return;
+  lastViolationAt = now;
+  try {
+    const res = await callBackend("violation", { token: state.token });
+    if (res.status === "ok") {
+      state.questions = res.questions;
+      state.answers = {};
+      state.current = 0;
+      renderQuestion();
+      const banner = $("violation-banner");
+      $("violation-banner-text").textContent = reason === "fullscreen"
+        ? "⚠ Sortie du plein écran détectée — réponses effacées, nouveau tirage généré. Le chronomètre continue."
+        : "⚠ Changement de fenêtre détecté — réponses effacées, nouveau tirage généré. Le chronomètre continue.";
+      banner.classList.remove("hidden");
+      setTimeout(() => banner.classList.add("hidden"), 8000);
     }
+  } catch (e) {
+    // en cas d'échec réseau, on ne bloque pas le stagiaire — le
+    // journal des tentatives reste de toute façon côté serveur.
   }
 }
 
-document.addEventListener("visibilitychange", handleVisibilityLoss);
-window.addEventListener("blur", handleVisibilityLoss);
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) handleViolation("visibility");
+});
+window.addEventListener("blur", () => handleViolation("visibility"));
+document.addEventListener("fullscreenchange", () => {
+  if (!document.fullscreenElement) handleViolation("fullscreen");
+});
+
+// Permet de revenir en plein écran d'un clic depuis le bandeau d'alerte —
+// requestFullscreen() doit être déclenché par un vrai geste utilisateur,
+// ce qui exclut de le relancer automatiquement depuis l'événement fullscreenchange.
+$("btn-refullscreen").addEventListener("click", async () => {
+  try { await document.documentElement.requestFullscreen(); } catch (e) {}
+});
 
 // Dissuasion basique : clic droit et copier-coller désactivés sur la zone de quiz.
 document.addEventListener("contextmenu", e => {

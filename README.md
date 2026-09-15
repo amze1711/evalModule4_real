@@ -1,8 +1,9 @@
 # QCM d'évaluation — Module 4 : Diffusion et distribution du documentaire
 
 Système d'évaluation en ligne : 140 questions en banque, 40 tirées par participant,
-chronomètre de 35 min basé sur l'heure serveur, détection de changement de fenêtre
-avec régénération du tirage, enregistrement et notation automatique côté serveur.
+chronomètre de 35 min basé sur l'heure serveur, plein écran obligatoire au départ,
+détection de changement de fenêtre ou de sortie du plein écran avec régénération
+du tirage, enregistrement et notation automatique côté serveur.
 
 ## ⚠️ Limites techniques à connaître avant utilisation
 
@@ -15,8 +16,11 @@ quelle que soit la plateforme utilisée :
    passe sur l'appareil utilisé pour l'évaluation, pas sur un appareil externe.
 2. **Aucun navigateur ne peut être verrouillé** depuis une simple page web — la
    détection de perte de focus est la meilleure alternative technique possible.
-   Un vrai verrouillage demanderait un logiciel dédié (type *Safe Exam Browser*)
-   installé sur chaque poste, ce qui sort du périmètre d'un site web hébergé.
+   Le plein écran obligatoire au démarrage (voir plus bas) renforce cette
+   détection mais ne verrouille rien non plus : rien n'empêche techniquement
+   un deuxième écran ou un deuxième appareil. Un vrai verrouillage demanderait
+   un logiciel dédié (type *Safe Exam Browser*) installé sur chaque poste, ce
+   qui sort du périmètre d'un site web hébergé.
 
 Il est recommandé d'annoncer clairement ces règles aux stagiaires en amont — l'effet
 dissuasif (nominatif + horodatage serveur + détection) reste réel, même sans blocage total.
@@ -295,14 +299,27 @@ Dans `functions/_lib/config.js` :
 
 ---
 
-## Ce qui se passe en cas de changement de fenêtre
+## Plein écran obligatoire et ce qui se passe en cas de changement de fenêtre
 
-1. Le navigateur détecte la perte de focus (`visibilitychange` ou `blur`).
+Au clic sur « Commencer l'évaluation », le navigateur demande le plein écran
+(`requestFullscreen()`) : si le stagiaire le refuse ou que son navigateur ne le
+supporte pas, l'évaluation ne démarre pas (message d'erreur affiché, aucune
+session créée). Objectif principal : rendre plus difficile l'écran fractionné
+(split-screen) avec une autre application ouverte à côté du questionnaire.
+
+Ensuite, pendant l'évaluation :
+
+1. Le navigateur détecte la perte de focus (`visibilitychange` ou `blur`) ou
+   la sortie du plein écran (`fullscreenchange`) — ces événements peuvent se
+   déclencher ensemble pour une même action (sortir du plein écran déclenche
+   souvent aussi un `blur`) ; le frontend ne compte qu'**une seule** violation
+   par action réelle (fenêtre de dédoublonnage de 1,5 s).
 2. Le frontend appelle `POST /api/violation`.
 3. Le serveur incrémente le compteur de violations, tire un **nouveau** jeu de
    40 questions (différent du précédent, via le même algorithme déterministe
    mulberry32 + hash), mais conserve l'heure de départ d'origine.
-4. Le frontend efface les réponses en cours et affiche les nouvelles questions.
+4. Le frontend efface les réponses en cours et affiche les nouvelles questions,
+   avec un bandeau d'alerte proposant de revenir en plein écran en un clic.
 5. Le nombre de violations est enregistré dans le résultat final, visible par
    le formateur dans KV et dans l'email de résultat.
 
