@@ -88,8 +88,10 @@ navigateur.
    exemple `qcm-module4`.
 3. Une fois créé, copiez son **ID** affiché dans la liste.
 4. Ouvrez le fichier `wrangler.toml` à la racine du dépôt et remplacez
-   `REMPLACER_PAR_ID_NAMESPACE_KV` par cet ID, puis committez/poussez ce
-   changement sur GitHub.
+   `REMPLACER_PAR_ID_NAMESPACE_KV` par cet ID. Profitez-en pour renseigner
+   aussi `ADMIN_EMAIL` dans la section `[vars]` du même fichier (l'adresse qui
+   recevra chaque résultat — voir étape 3 pour la contrainte Resend). Committez
+   et poussez ce changement sur GitHub.
 
 ## Étape 3 — Créer un compte Resend et obtenir une clé API
 
@@ -130,23 +132,36 @@ directement — les deux dans un seul projet, déclaré dans `wrangler.toml`.
 
 ## Étape 6 — Relier le stockage KV et les clés au projet
 
-1. Dans votre projet : **Paramètres (Settings) > Variables and Secrets** (ou
-   *Environment variables*, selon la version de l'interface).
+⚠️ **Piège fréquent** : la page **Settings** du projet contient DEUX sections
+qui se ressemblent :
+- **"Runtime variables and secrets"**, tout en haut de la page — c'est celle
+  que le Worker lit réellement quand il répond aux requêtes (`env.MA_VARIABLE`
+  dans le code).
+- **"Variables and secrets"** à l'intérieur de la section **Builds** (plus
+  bas, dans la configuration Git) — celle-ci ne sert qu'au processus de
+  build/CI, jamais au code du Worker en production.
+
+Une variable ajoutée dans la mauvaise section (Builds) n'aura **aucun effet**
+sur l'application, même si elle a l'air bien enregistrée. Utilisez toujours
+la section du **haut** ("Runtime variables and secrets").
+
+1. Dans votre projet : **Settings**, section **Runtime variables and secrets**
+   (tout en haut de la page) → **+ Add variable**.
 2. Ajoutez :
-   - `RESEND_API_KEY` → la clé copiée à l'étape 3 (type **Secret**, pas texte
-     en clair)
-   - `ADMIN_EMAIL` → l'adresse email du formateur (doit correspondre à
-     l'adresse du compte Resend, voir étape 3)
+   - `RESEND_API_KEY` → la clé copiée à l'étape 3, type **Secret**
    - `EMAIL_FROM` (optionnel) → laissez vide pour utiliser la valeur par défaut
      `QCM Module 4 <onboarding@resend.dev>`, ou indiquez une adresse `@votredomaine`
      si vous avez vérifié un domaine sur Resend
-3. Le binding KV (`QCM_KV`) est déjà déclaré dans `wrangler.toml` avec l'ID de
+3. `ADMIN_EMAIL` est déjà fixé dans `wrangler.toml` (variable `[vars]`) — pas
+   besoin de l'ajouter ici. Si vous devez le changer, modifiez cette valeur
+   dans `wrangler.toml` et repoussez sur GitHub plutôt que de l'ajouter dans
+   le dashboard (plus fiable : ça survit à chaque redéploiement).
+4. Le binding KV (`QCM_KV`) est déjà déclaré dans `wrangler.toml` avec l'ID de
    votre namespace (étape 2) — Cloudflare le relie automatiquement au
    déploiement, rien à faire de plus ici pour lui.
-4. Retournez dans l'onglet **Déploiements** et cliquez sur **Réessayer le
-   déploiement** (*Retry deployment*) sur le dernier déploiement, pour qu'il
-   prenne en compte les nouvelles variables — ou faites simplement un nouveau
-   `git push`.
+5. Les variables "Runtime" prennent effet immédiatement, sans redéploiement.
+   Vérifiez sur `https://<votre-url>/api/health` : le champ `email_config`
+   doit afficher `RESEND_API_KEY: true`.
 
 ## Étape 7 — Test complet avant utilisation réelle
 
