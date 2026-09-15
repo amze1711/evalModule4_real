@@ -65,10 +65,23 @@ export async function onRequestPost({ request, env }) {
     pdfError = String(err);
   }
 
-  const adminEmailResult = await sendAdminEmail(env, { ...emailParams, pdfBytes });
-  const participantEmailResult = await sendParticipantEmail(env, { ...emailParams, to: session.email, pdfBytes });
-
   const resultPdfUrl = new URL(`/api/result-pdf?token=${body.token}`, request.url).toString();
+
+  // Le lien de téléchargement est inclus dans le TEXTE de l'email (pas
+  // seulement en pièce jointe binaire) : si l'attachement échoue pour une
+  // raison quelconque côté Resend/client mail, le lien reste un moyen fiable
+  // de récupérer le PDF. Si la génération elle-même a échoué, on le signale
+  // explicitement plutôt que de laisser l'absence de PDF passer inaperçue.
+  const emailParamsWithPdf = {
+    ...emailParams,
+    resultPdfUrl: pdfBytes ? resultPdfUrl : null,
+    pdfGenerationFailed: !pdfBytes,
+  };
+
+  // Le formateur reçoit en plus le détail technique de l'erreur (utile pour
+  // diagnostiquer), jamais montré au participant.
+  const adminEmailResult = await sendAdminEmail(env, { ...emailParamsWithPdf, pdfBytes, pdfErrorDetail: pdfError });
+  const participantEmailResult = await sendParticipantEmail(env, { ...emailParamsWithPdf, to: session.email, pdfBytes });
 
   // L'échec d'un envoi (ou des deux) ne doit jamais bloquer l'enregistrement
   // du résultat, déjà écrit ci-dessus. On note le statut de chaque envoi, et
@@ -82,7 +95,7 @@ export async function onRequestPost({ request, env }) {
     adminEmailDebug: adminEmailResult.sent ? undefined : adminEmailResult.reason,
     participantEmailSent: participantEmailResult.sent,
     participantEmailDebug: participantEmailResult.sent ? undefined : participantEmailResult.reason,
-    participantEmailText: buildParticipantEmailText({ ...emailParams, to: session.email }),
+    participantEmailText: buildParticipantEmailText({ ...emailParamsWithPdf, to: session.email }),
     resultPdfUrl: pdfBytes ? resultPdfUrl : undefined,
     pdfError: pdfError || undefined,
   }));

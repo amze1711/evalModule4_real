@@ -96,5 +96,8 @@ export async function buildResultPdf({
     );
   });
 
-  return pdfDoc.save(); // Uint8Array
+  // useObjectStreams: false évite la passe de compression des object streams
+  // (coûteuse en CPU pour un gain de taille négligeable sur un PDF de
+  // quelques pages) — utile sous la limite de temps CPU des Workers Cloudflare.
+  return pdfDoc.save({ useObjectStreams: false }); // Uint8Array
 }

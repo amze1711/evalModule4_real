@@ -15,7 +15,7 @@
 
 import { scoreLevel } from "./grading.js";
 
-function formatSummary({ nom, email, score, scoreMax, dureeMinutes, violationCount, startTime, endTime }) {
+function formatSummary({ nom, email, score, scoreMax, dureeMinutes, violationCount, startTime, endTime, resultPdfUrl, pdfGenerationFailed, pdfErrorDetail }) {
   const { pct, note20, label } = scoreLevel(score, scoreMax);
   return [
     `Participant : ${nom}`,
@@ -26,6 +26,11 @@ function formatSummary({ nom, email, score, scoreMax, dureeMinutes, violationCou
     `Changements de fenêtre détectés : ${violationCount}`,
     `Début : ${new Date(startTime).toLocaleString("fr-FR")}`,
     `Fin : ${new Date(endTime).toLocaleString("fr-FR")}`,
+    // Le lien figure dans le texte lui-même (pas seulement en pièce jointe) :
+    // il reste utilisable même si l'attachement binaire échoue côté client
+    // mail ou Resend.
+    ...(resultPdfUrl ? [``, `Télécharger le PDF complet : ${resultPdfUrl}`] : []),
+    ...(pdfGenerationFailed ? [``, `⚠️ Le PDF n'a pas pu être généré automatiquement pour cet envoi.${pdfErrorDetail ? ` (${pdfErrorDetail})` : ""}`] : []),
   ].join("\n");
 }
 
