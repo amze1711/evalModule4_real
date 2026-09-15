@@ -70,13 +70,14 @@ export async function sendAdminEmail(env, params) {
   return sendViaResend(env, { to: env.ADMIN_EMAIL, subject: `Résultat QCM — ${params.nom}`, text });
 }
 
-// Copie complète des réponses envoyée au participant (obligation légale de
-// lui fournir une trace de son évaluation). Nécessite un domaine vérifié
-// sur Resend pour fonctionner vers une adresse autre que celle du compte.
-export async function sendParticipantEmail(env, params) {
-  if (!env.RESEND_API_KEY) return { sent: false, reason: "RESEND_API_KEY absent." };
-  if (!params.to) return { sent: false, reason: "Adresse email du participant manquante." };
-  const text = [
+export const PARTICIPANT_EMAIL_SUBJECT = "Votre résultat — Module 4 : Diffusion et distribution du documentaire";
+
+// Message complet destiné au participant (obligation légale de lui fournir
+// une trace de son évaluation). Exporté séparément de l'envoi lui-même pour
+// pouvoir être stocké tel quel (prêt à copier-coller) même quand l'envoi
+// automatique échoue faute de domaine Resend vérifié — voir README.md.
+export function buildParticipantEmailText(params) {
+  return [
     `Bonjour ${params.nom},`,
     ``,
     `Voici le détail de votre évaluation — Module 4 : Diffusion et distribution du documentaire.`,
@@ -87,5 +88,15 @@ export async function sendParticipantEmail(env, params) {
     ``,
     formatDetail(params.detail),
   ].join("\n");
-  return sendViaResend(env, { to: params.to, subject: "Votre résultat — Module 4 : Diffusion et distribution du documentaire", text });
+}
+
+// Copie complète des réponses envoyée au participant. Nécessite un domaine
+// vérifié sur Resend pour fonctionner vers une adresse autre que celle du
+// compte (sinon échoue proprement, voir buildParticipantEmailText ci-dessus
+// pour l'envoi manuel de secours).
+export async function sendParticipantEmail(env, params) {
+  if (!env.RESEND_API_KEY) return { sent: false, reason: "RESEND_API_KEY absent." };
+  if (!params.to) return { sent: false, reason: "Adresse email du participant manquante." };
+  const text = buildParticipantEmailText(params);
+  return sendViaResend(env, { to: params.to, subject: PARTICIPANT_EMAIL_SUBJECT, text });
 }

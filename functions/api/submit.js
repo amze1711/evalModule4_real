@@ -1,7 +1,7 @@
 import { json, readJsonBody } from "../_lib/http.js";
 import { QUESTION_BANK } from "../_lib/questions.js";
 import { gradeAnswers } from "../_lib/grading.js";
-import { sendAdminEmail, sendParticipantEmail } from "../_lib/email.js";
+import { sendAdminEmail, sendParticipantEmail, buildParticipantEmailText } from "../_lib/email.js";
 import { SESSION_TTL_SECONDS } from "../_lib/config.js";
 
 export async function onRequestPost({ request, env }) {
@@ -54,19 +54,23 @@ export async function onRequestPost({ request, env }) {
   const participantEmailResult = await sendParticipantEmail(env, { ...emailParams, to: session.email });
 
   // L'échec d'un envoi (ou des deux) ne doit jamais bloquer l'enregistrement
-  // du résultat, déjà écrit ci-dessus ; on note simplement le statut de
-  // chaque envoi dans le même enregistrement, consultable dans KV.
+  // du résultat, déjà écrit ci-dessus. On note le statut de chaque envoi, et
+  // on stocke systématiquement le texte complet prêt à copier-coller
+  // (participantEmailText) : tant qu'aucun domaine n'est vérifié sur Resend,
+  // l'envoi automatique au participant échoue et ce texte sert d'envoi
+  // manuel de secours — voir README.md.
   await env.QCM_KV.put(`result:${body.token}`, JSON.stringify({
     ...result,
     adminEmailSent: adminEmailResult.sent,
     adminEmailDebug: adminEmailResult.sent ? undefined : adminEmailResult.reason,
     participantEmailSent: participantEmailResult.sent,
     participantEmailDebug: participantEmailResult.sent ? undefined : participantEmailResult.reason,
+    participantEmailText: buildParticipantEmailText({ ...emailParams, to: session.email }),
   }));
 
   const message = participantEmailResult.sent
     ? `Vos réponses ont été enregistrées. Le détail de votre évaluation vous a été envoyé à ${session.email}.`
-    : "Vos réponses ont été enregistrées. Nous n'avons pas pu vous envoyer le détail par email — contactez le formateur pour l'obtenir.";
+    : "Vos réponses ont été enregistrées. Le détail de votre évaluation vous sera transmis par le formateur.";
 
   return json({ status: "ok", message });
 }

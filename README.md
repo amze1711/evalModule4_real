@@ -209,6 +209,16 @@ du participant), `adminEmailSent`/`adminEmailDebug` et
 `participantEmailSent`/`participantEmailDebug` — pratique pour vérifier
 rapidement si l'envoi a réussi sans avoir besoin des logs Cloudflare.
 
+### Envoyer les résultats manuellement (sans domaine Resend vérifié)
+
+Tant qu'aucun domaine n'est vérifié sur Resend (voir Étape 3), l'envoi
+automatique au participant échoue systématiquement — `participantEmailSent`
+vaudra `false`. Chaque résultat contient quand même un champ
+**`participantEmailText`** : le message complet, déjà rédigé et mis en forme
+(score, détail question par question), prêt à copier-coller directement dans
+un email que vous envoyez vous-même à l'adresse indiquée dans le champ
+`email` du même résultat. Aucune reconstruction manuelle nécessaire.
+
 ---
 
 ## Développement local (optionnel, pour tester avant de déployer)
