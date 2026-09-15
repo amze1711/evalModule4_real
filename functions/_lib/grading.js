@@ -41,3 +41,16 @@ export function gradeAnswers(questionIds, answers, bank) {
 
   return { score, scoreMax, detail };
 }
+
+// Convertit un score brut en note sur 20 et en niveau d'acquisition, avec
+// les mêmes seuils partout où un résultat est affiché (email, PDF) :
+// < 50% non acquis, 50-75% en cours d'acquisition, > 75% acquis.
+export function scoreLevel(score, scoreMax) {
+  const pct = scoreMax > 0 ? Math.round((score / scoreMax) * 1000) / 10 : 0;
+  const note20 = scoreMax > 0 ? Math.round((score / scoreMax) * 20 * 10) / 10 : 0;
+  let label;
+  if (pct < 50) label = "Non acquis";
+  else if (pct < 75) label = "En cours d'acquisition";
+  else label = "Acquis";
+  return { pct, note20, label };
+}

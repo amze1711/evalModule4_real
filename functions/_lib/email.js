@@ -13,12 +13,15 @@
 // déjà en base à ce stade — chaque fonction retourne { sent, reason }
 // plutôt que de lever une exception.
 
+import { scoreLevel } from "./grading.js";
+
 function formatSummary({ nom, email, score, scoreMax, dureeMinutes, violationCount, startTime, endTime }) {
-  const pct = scoreMax > 0 ? Math.round((score / scoreMax) * 1000) / 10 : 0;
+  const { pct, note20, label } = scoreLevel(score, scoreMax);
   return [
     `Participant : ${nom}`,
     ...(email ? [`Email : ${email}`] : []),
-    `Score : ${score} / ${scoreMax} (${pct}%)`,
+    `Score : ${score} / ${scoreMax} (${pct}%) — ${note20}/20`,
+    `Niveau d'acquisition : ${label}`,
     `Durée : ${dureeMinutes} min`,
     `Changements de fenêtre détectés : ${violationCount}`,
     `Début : ${new Date(startTime).toLocaleString("fr-FR")}`,

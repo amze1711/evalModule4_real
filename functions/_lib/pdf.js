@@ -3,6 +3,7 @@
 // Worker Cloudflare, contrairement à la plupart des générateurs PDF qui
 // nécessitent Node.js ou un navigateur headless).
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { scoreLevel } from "./grading.js";
 
 const PAGE_WIDTH = 595.28; // A4
 const PAGE_HEIGHT = 841.89;
@@ -64,14 +65,18 @@ export async function buildResultPdf({
     y -= 14;
   }
 
-  const pct = scoreMax > 0 ? Math.round((score / scoreMax) * 1000) / 10 : 0;
+  const { pct, note20, label } = scoreLevel(score, scoreMax);
+  const levelColor = pct < 50 ? rgb(0.84, 0.15, 0.24) // rouge — non acquis
+    : pct < 75 ? rgb(0.80, 0.52, 0.06) // orange — en cours d'acquisition
+    : rgb(0.13, 0.5, 0.24); // vert — acquis
 
   drawLine("Résultat d'évaluation", { size: 18, bold: true, gap: 6 });
   drawLine("Module 4 — Diffusion et distribution du documentaire", { size: 12, gap: 16, color: rgb(0.42, 0.42, 0.46) });
 
   drawLine(`Participant : ${nom}`, { size: 11 });
   if (email) drawLine(`Email : ${email}`, { size: 11 });
-  drawLine(`Score : ${score} / ${scoreMax} (${pct}%)`, { size: 13, bold: true, color: rgb(0.84, 0.15, 0.24) }); // --red
+  drawLine(`Score : ${score} / ${scoreMax} (${pct}%) — ${note20}/20`, { size: 13, bold: true, color: levelColor });
+  drawLine(`Niveau d'acquisition : ${label}`, { size: 12, bold: true, gap: 10, color: levelColor });
   drawLine(`Durée : ${dureeMinutes} min`, { size: 11 });
   drawLine(`Changements de fenêtre détectés : ${violationCount}`, { size: 11 });
   drawLine(`Début : ${new Date(startTime).toLocaleString("fr-FR")}`, { size: 11 });
