@@ -2,6 +2,7 @@ import { json, readJsonBody } from "../_lib/http.js";
 import { QUESTION_BANK } from "../_lib/questions.js";
 import { gradeAnswers } from "../_lib/grading.js";
 import { sendAdminEmail, sendParticipantEmail, buildParticipantEmailText } from "../_lib/email.js";
+import { buildResultPdf } from "../_lib/pdf.js";
 import { SESSION_TTL_SECONDS } from "../_lib/config.js";
 
 export async function onRequestPost({ request, env }) {
@@ -41,6 +42,7 @@ export async function onRequestPost({ request, env }) {
 
   const emailParams = {
     nom: session.nom,
+    email: session.email,
     score,
     scoreMax,
     dureeMinutes,
@@ -50,15 +52,30 @@ export async function onRequestPost({ request, env }) {
     detail,
   };
 
-  const adminEmailResult = await sendAdminEmail(env, emailParams);
-  const participantEmailResult = await sendParticipantEmail(env, { ...emailParams, to: session.email });
+  // PDF mis en forme (score + détail complet), stocké à part dans KV en
+  // binaire brut (pas de base64 dans le JSON, plus compact). Utilisé à la
+  // fois pour le téléchargement manuel (/api/result-pdf) et comme pièce
+  // jointe automatique dès qu'un domaine Resend sera vérifié.
+  let pdfBytes = null;
+  let pdfError = null;
+  try {
+    pdfBytes = await buildResultPdf(emailParams);
+    await env.QCM_KV.put(`result-pdf:${body.token}`, pdfBytes);
+  } catch (err) {
+    pdfError = String(err);
+  }
+
+  const adminEmailResult = await sendAdminEmail(env, { ...emailParams, pdfBytes });
+  const participantEmailResult = await sendParticipantEmail(env, { ...emailParams, to: session.email, pdfBytes });
+
+  const resultPdfUrl = new URL(`/api/result-pdf?token=${body.token}`, request.url).toString();
 
   // L'échec d'un envoi (ou des deux) ne doit jamais bloquer l'enregistrement
   // du résultat, déjà écrit ci-dessus. On note le statut de chaque envoi, et
   // on stocke systématiquement le texte complet prêt à copier-coller
-  // (participantEmailText) : tant qu'aucun domaine n'est vérifié sur Resend,
-  // l'envoi automatique au participant échoue et ce texte sert d'envoi
-  // manuel de secours — voir README.md.
+  // (participantEmailText) et le lien du PDF : tant qu'aucun domaine n'est
+  // vérifié sur Resend, l'envoi automatique au participant échoue et ces
+  // deux éléments servent à l'envoi manuel de secours — voir README.md.
   await env.QCM_KV.put(`result:${body.token}`, JSON.stringify({
     ...result,
     adminEmailSent: adminEmailResult.sent,
@@ -66,6 +83,8 @@ export async function onRequestPost({ request, env }) {
     participantEmailSent: participantEmailResult.sent,
     participantEmailDebug: participantEmailResult.sent ? undefined : participantEmailResult.reason,
     participantEmailText: buildParticipantEmailText({ ...emailParams, to: session.email }),
+    resultPdfUrl: pdfBytes ? resultPdfUrl : undefined,
+    pdfError: pdfError || undefined,
   }));
 
   const message = participantEmailResult.sent

@@ -213,11 +213,21 @@ rapidement si l'envoi a réussi sans avoir besoin des logs Cloudflare.
 
 Tant qu'aucun domaine n'est vérifié sur Resend (voir Étape 3), l'envoi
 automatique au participant échoue systématiquement — `participantEmailSent`
-vaudra `false`. Chaque résultat contient quand même un champ
-**`participantEmailText`** : le message complet, déjà rédigé et mis en forme
-(score, détail question par question), prêt à copier-coller directement dans
-un email que vous envoyez vous-même à l'adresse indiquée dans le champ
-`email` du même résultat. Aucune reconstruction manuelle nécessaire.
+vaudra `false`. Chaque résultat contient quand même de quoi envoyer
+manuellement :
+
+- **`participantEmailText`** : le message complet, déjà rédigé et mis en
+  forme (score, détail question par question), prêt à copier-coller dans le
+  corps d'un email que vous envoyez vous-même à l'adresse du champ `email`.
+- **`resultPdfUrl`** : un lien direct vers un PDF mis en forme du résultat
+  (score, détail complet des réponses), à télécharger et joindre à votre
+  email. Le lien a la forme
+  `https://<votre-url>/api/result-pdf?token=<token>` — ouvrez-le simplement
+  dans un navigateur pour télécharger le fichier.
+
+Dès qu'un domaine sera vérifié sur Resend, ce même PDF sera automatiquement
+joint aux emails envoyés (participant et formateur), sans changement à faire
+dans le code.
 
 ---
 
@@ -307,11 +317,13 @@ src/worker.js                 → point d'entrée du Worker : route /api/* vers 
 functions/api/health.js       → handler GET /api/health (vérification que l'API répond)
 functions/api/start.js        → handler POST /api/start (démarrage, tirage, horodatage serveur)
 functions/api/violation.js    → handler POST /api/violation (nouveau tirage après changement de fenêtre)
-functions/api/submit.js       → handler POST /api/submit (correction serveur, enregistrement, email)
+functions/api/submit.js       → handler POST /api/submit (correction serveur, enregistrement, email, PDF)
+functions/api/result-pdf.js   → handler GET /api/result-pdf?token=... (téléchargement du PDF de résultat)
 functions/_lib/questions.js   → banque de 140 questions AVEC les bonnes réponses (jamais public)
 functions/_lib/random.js      → tirage pseudo-aléatoire déterministe (mulberry32 + hash)
 functions/_lib/grading.js     → correction et filtrage des questions envoyées au client
-functions/_lib/email.js       → envoi du résultat par email via l'API Resend
+functions/_lib/email.js       → envoi des emails (formateur + participant) via l'API Resend
+functions/_lib/pdf.js         → génération du PDF de résultat mis en forme (pdf-lib)
 functions/_lib/config.js      → réglages (nombre de questions, durée, TTL session)
 wrangler.toml                  → configuration Cloudflare (Worker, assets statiques, liaison KV)
 package.json                  → scripts npm (dev local, déploiement CLI)

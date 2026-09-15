@@ -13,10 +13,11 @@
 // déjà en base à ce stade — chaque fonction retourne { sent, reason }
 // plutôt que de lever une exception.
 
-function formatSummary({ nom, score, scoreMax, dureeMinutes, violationCount, startTime, endTime }) {
+function formatSummary({ nom, email, score, scoreMax, dureeMinutes, violationCount, startTime, endTime }) {
   const pct = scoreMax > 0 ? Math.round((score / scoreMax) * 1000) / 10 : 0;
   return [
     `Participant : ${nom}`,
+    ...(email ? [`Email : ${email}`] : []),
     `Score : ${score} / ${scoreMax} (${pct}%)`,
     `Durée : ${dureeMinutes} min`,
     `Changements de fenêtre détectés : ${violationCount}`,
@@ -37,20 +38,35 @@ function formatDetail(detail) {
   }).join("\n\n");
 }
 
-async function sendViaResend(env, { to, subject, text }) {
+// Encode un Uint8Array en base64 sans passer par un seul String.fromCharCode
+// géant (risque de dépassement de pile sur un PDF de plusieurs dizaines de Ko).
+function toBase64(bytes) {
+  let binary = "";
+  const chunkSize = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
+  }
+  return btoa(binary);
+}
+
+async function sendViaResend(env, { to, subject, text, pdfBytes, pdfFilename }) {
   try {
+    const body = {
+      from: env.EMAIL_FROM || "QCM Module 4 <onboarding@resend.dev>",
+      to: [to],
+      subject,
+      text,
+    };
+    if (pdfBytes) {
+      body.attachments = [{ filename: pdfFilename || "resultat.pdf", content: toBase64(pdfBytes) }];
+    }
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${env.RESEND_API_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        from: env.EMAIL_FROM || "QCM Module 4 <onboarding@resend.dev>",
-        to: [to],
-        subject,
-        text,
-      }),
+      body: JSON.stringify(body),
     });
     if (!res.ok) {
       const body = await res.text().catch(() => "");
@@ -67,7 +83,13 @@ export async function sendAdminEmail(env, params) {
   if (!env.RESEND_API_KEY) return { sent: false, reason: "RESEND_API_KEY absent." };
   if (!env.ADMIN_EMAIL) return { sent: false, reason: "ADMIN_EMAIL absent." };
   const text = `Résultat de l'évaluation Module 4\n\n${formatSummary(params)}`;
-  return sendViaResend(env, { to: env.ADMIN_EMAIL, subject: `Résultat QCM — ${params.nom}`, text });
+  return sendViaResend(env, {
+    to: env.ADMIN_EMAIL,
+    subject: `Résultat QCM — ${params.nom}`,
+    text,
+    pdfBytes: params.pdfBytes,
+    pdfFilename: `resultat-${params.nom}.pdf`,
+  });
 }
 
 export const PARTICIPANT_EMAIL_SUBJECT = "Votre résultat — Module 4 : Diffusion et distribution du documentaire";
@@ -98,5 +120,11 @@ export async function sendParticipantEmail(env, params) {
   if (!env.RESEND_API_KEY) return { sent: false, reason: "RESEND_API_KEY absent." };
   if (!params.to) return { sent: false, reason: "Adresse email du participant manquante." };
   const text = buildParticipantEmailText(params);
-  return sendViaResend(env, { to: params.to, subject: PARTICIPANT_EMAIL_SUBJECT, text });
+  return sendViaResend(env, {
+    to: params.to,
+    subject: PARTICIPANT_EMAIL_SUBJECT,
+    text,
+    pdfBytes: params.pdfBytes,
+    pdfFilename: `resultat-${params.nom}.pdf`,
+  });
 }

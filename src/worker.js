@@ -7,6 +7,7 @@ import { onRequestGet as healthGet } from "../functions/api/health.js";
 import { onRequestPost as startPost } from "../functions/api/start.js";
 import { onRequestPost as violationPost } from "../functions/api/violation.js";
 import { onRequestPost as submitPost } from "../functions/api/submit.js";
+import { onRequestGet as resultPdfGet } from "../functions/api/result-pdf.js";
 
 export default {
   async fetch(request, env) {
@@ -23,6 +24,9 @@ export default {
     }
     if (pathname === "/api/submit" && request.method === "POST") {
       return submitPost({ request, env });
+    }
+    if (pathname === "/api/result-pdf" && request.method === "GET") {
+      return resultPdfGet({ request, env });
     }
 
     return env.ASSETS.fetch(request);
