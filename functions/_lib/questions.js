@@ -11,9 +11,9 @@
 //   8. Évaluer les effets du documentaire sur le public
 //   9. Analyser réception, controverses et points forts
 //  10. Monter un plan de circulation du film
-//  11. Savoir présenter son film aux bons interlocuteurs (+ mandat fictif)
+//  11. Savoir présenter son film aux bons interlocuteurs
 //  12. Créer une bande-annonce qui donne envie
-//  13. Déployer une communication cohérente (+ exemple calendrier éditorial)
+//  13. Déployer une communication cohérente
 //  14. Articuler festivals, médias et projections
 //  15. Préparer un film circulant sur plusieurs territoires
 //  16. Défendre la valeur du film sans le dénaturer (négociation)
@@ -22,7 +22,9 @@
 // Chaque question a un id unique, un type, un texte, des options si QCM,
 // une réponse correcte, et le nombre de points. Les questions sont
 // formulées en mise en situation professionnelle plutôt qu'en rappel brut
-// du cours, tout en restant fidèles au contenu et au vocabulaire fournis.
+// du cours, avec des exemples et scénarios inventés pour illustrer les
+// notions (jamais les exemples ou cas nommés du cours lui-même), tout en
+// restant fidèles au vocabulaire et aux concepts enseignés.
 export const QUESTION_BANK = [
   // ============================================================
   // 1. Diffusion, distribution, exploitation — vocabulaire de base
@@ -142,7 +144,7 @@ export const QUESTION_BANK = [
   { id: "q036", type: "mcq", text: "Une logline efficace contient généralement :",
     options: ["Le budget et le calendrier de tournage", "Le sujet, un personnage central, une tension, et ce qui rend le projet unique", "La biographie complète du réalisateur", "La liste des festivals visés"],
     answer: "Le sujet, un personnage central, une tension, et ce qui rend le projet unique", points: 2 },
-  { id: "q037", type: "text", text: "Vous rédigez votre logline selon la structure vue en cours : « À travers [...], le film explore [...] et interroge [...] ». Que désigne le premier élément entre crochets ?",
+  { id: "q037", type: "text", text: "Vous construisez votre logline en trois temps : vous présentez d'abord qui est au cœur du film, puis ce que le film explore à travers cette personne, puis la question qu'il pose. Comment appelle-t-on ce premier élément, celui qui ouvre la logline ?",
     answer: ["personnage", "le personnage", "personnage/groupe", "le personnage ou le groupe", "un personnage"], points: 2 },
   { id: "q038", type: "mcq", text: "Vous devez envoyer un résumé de quelques lignes à une demi-page pour un catalogue de festival, clair et précis. Quel type de document rédigez-vous ?",
     options: ["Un synopsis court", "Un synopsis long", "Une note de réalisation", "Un dossier de presse complet"],
@@ -150,7 +152,7 @@ export const QUESTION_BANK = [
   { id: "q039", type: "mcq", text: "Un synopsis long, contrairement au synopsis court, doit surtout :",
     options: ["Tenir en une seule phrase", "Développer le contexte, les personnages et la progression de l'histoire, sans parler de l'auteur", "Parler principalement de vous et de votre parcours", "Remplacer entièrement la note d'intention"],
     answer: "Développer le contexte, les personnages et la progression de l'histoire, sans parler de l'auteur", points: 2 },
-  { id: "q040", type: "mcq", text: "Lequel de ces deux synopsis est le plus précis, selon la méthode vue en cours : « Un film sur la vie rurale et ses transformations » ou « Dans un village de 300 habitants, une bergère de 22 ans reprend la ferme familiale » ?",
+  { id: "q040", type: "mcq", text: "Lequel de ces deux synopsis est le plus précis, selon la méthode du cours : « Un documentaire sur le monde du travail aujourd'hui » ou « Dans un entrepôt logistique de la banlieue lyonnaise, trois caristes de nuit tentent d'obtenir un CDI avant la fermeture du site » ?",
     options: ["Le premier, car il évite de trop dévoiler l'histoire", "Le second, car il donne des lieux, personnes et situations précises", "Les deux sont équivalents", "Aucun des deux n'est un synopsis valable"],
     answer: "Le second, car il donne des lieux, personnes et situations précises", points: 2 },
   { id: "q041", type: "text", text: "Votre dossier de présentation risque de se perdre parmi des centaines d'autres si votre synopsis reste flou et général. Quel est le principal défaut à éviter, selon le cours ?",
@@ -255,7 +257,7 @@ export const QUESTION_BANK = [
   { id: "q071", type: "mcq", text: "Un article pointe un problème précis sur une scène de votre film, puis d'autres médias reprennent le sujet en l'amplifiant. Quelle est l'étape suivante typique du circuit d'une controverse, selon le cours ?",
     options: ["Le sujet disparaît immédiatement", "La réaction du réalisateur ou du producteur", "Un procès automatique", "Le retrait du film de tous les circuits"],
     answer: "La réaction du réalisateur ou du producteur", points: 2 },
-  { id: "q072", type: "text", text: "Selon le circuit d'une controverse vu en cours, qu'est-ce qui déclenche généralement la toute première étape ?",
+  { id: "q072", type: "text", text: "Selon le circuit type d'une controverse, qu'est-ce qui déclenche généralement la toute première étape ?",
     answer: ["un article", "un post", "un detail precis", "un détail précis", "une scene", "une scène", "une déclaration en interview", "une declaration en interview"], points: 2 },
   { id: "q073", type: "mcq", text: "Une seule critique mentionne un point fort de votre film ; aucune autre ne le reprend. Comment devez-vous considérer ce point, selon la méthode vue en cours ?",
     options: ["Comme un vrai point fort à mettre en avant partout", "Comme un avis isolé, pas encore une tendance de réception confirmée", "Comme une erreur du critique à corriger", "Comme une controverse naissante"],
@@ -308,19 +310,19 @@ export const QUESTION_BANK = [
   { id: "q087", type: "mcq", text: "Vous rencontrez Karim Belaïd, distributeur indépendant, qui vous demande si votre film peut remplir une salle un samedi soir et s'il y a un public identifiable. Quel angle privilégier face à lui ?",
     options: ["Le dispositif artistique du tournage", "Le public visé et le potentiel de circulation", "Votre biographie personnelle", "Le droit moral de l'auteur"],
     answer: "Le public visé et le potentiel de circulation", points: 2 },
-  { id: "q088", type: "mcq", text: "Dans le mandat fictif étudié en cours (« Le Chemin des Pêcheurs »), sur quel territoire porte l'exploitation exclusive confiée au distributeur ?",
-    options: ["France métropolitaine et DROM-COM uniquement", "Le monde entier", "L'Union européenne", "Uniquement les DROM-COM"],
-    answer: "France métropolitaine et DROM-COM uniquement", points: 2 },
-  { id: "q089", type: "text", text: "Dans le mandat fictif « Le Chemin des Pêcheurs » étudié en cours, le distributeur verse à la signature un minimum garanti de 3 000 €, remboursé sur les futures recettes. Quel est le taux de commission que le distributeur garde ensuite sur les recettes nettes, une fois ce minimum garanti remboursé ?",
-    answer: ["25%", "25 %", "25"], points: 2 },
-  { id: "q090", type: "mcq", text: "Dans le mandat fictif « Le Chemin des Pêcheurs » étudié en cours, les frais de promotion et de sortie (copies, matériel publicitaire, relations presse) sont plafonnés à 4 000 €. Pourquoi ce plafond est-il présenté comme un bon point pour le producteur ?",
-    options: ["Il augmente automatiquement les recettes du film", "Sans lui, ces frais pourraient gonfler et retarder le moment où le producteur touche de l'argent", "Il rend le contrat plus long à négocier", "Il supprime toute obligation de reporting"],
+  { id: "q088", type: "mcq", text: "Vous signez un mandat de distribution avec la société Marée Haute Distribution pour votre film. Le contrat lui confie l'exploitation exclusive sur le territoire suivant : France métropolitaine et Belgique uniquement, pour une durée de 3 ans. Un distributeur japonais vous contacte ensuite pour exploiter le film chez lui. Pouvez-vous signer avec lui sans l'accord de Marée Haute Distribution ?",
+    options: ["Oui, le mandat ne couvre pas le Japon donc vous êtes libre sur ce territoire", "Non, il faut son accord même en dehors de son territoire", "Oui, mais seulement après la fin du mandat", "Non, aucune vente internationale n'est jamais possible"],
+    answer: "Oui, le mandat ne couvre pas le Japon donc vous êtes libre sur ce territoire", points: 2 },
+  { id: "q089", type: "text", text: "Dans un mandat de distribution, le distributeur vous verse à la signature un minimum garanti de 5 000 €, remboursé sur les futures recettes du film. Une fois ce minimum garanti intégralement remboursé, il garde ensuite 30 % des recettes nettes. Le film génère par la suite 20 000 € de recettes nettes après ce remboursement. Combien revient-il au producteur sur cette somme ?",
+    answer: ["14000", "14000€", "14000 €", "14 000", "14 000€", "14 000 €"], points: 2 },
+  { id: "q090", type: "mcq", text: "Dans un mandat de distribution, les frais de promotion et de sortie engagés par le distributeur (copies, matériel publicitaire, relations presse) sont plafonnés contractuellement à 6 000 €. Pourquoi ce plafond protège-t-il les intérêts du producteur ?",
+    options: ["Il augmente automatiquement les recettes du film", "Sans lui, ces frais pourraient gonfler et retarder le moment où le producteur touche de l'argent", "Il rend le contrat plus long à négocier", "Il supprime toute obligation de reporting du distributeur"],
     answer: "Sans lui, ces frais pourraient gonfler et retarder le moment où le producteur touche de l'argent", points: 2 },
-  { id: "q091", type: "text", text: "Le distributeur de « Le Chemin des Pêcheurs » s'engage à transmettre un relevé de recettes détaillé au producteur selon une fréquence précise, plutôt que seulement à la fin du contrat. Tous les combien de temps ?",
-    answer: ["tous les 6 mois", "6 mois", "tous les six mois"], points: 2 },
-  { id: "q092", type: "mcq", text: "Dans le mandat fictif « Le Chemin des Pêcheurs » étudié en cours, en cas de manquement grave de l'une des parties, l'autre partie peut résilier le contrat, mais seulement après :",
-    options: ["Une décision immédiate sans préavis", "Une mise en demeure restée sans effet pendant 30 jours", "L'accord du vendeur international", "Le remboursement intégral du minimum garanti"],
-    answer: "Une mise en demeure restée sans effet pendant 30 jours", points: 2 },
+  { id: "q091", type: "text", text: "Dans un mandat de distribution, le contrat prévoit que le distributeur transmette au producteur un relevé détaillé des recettes tous les 4 mois, plutôt que seulement à la fin du mandat. Comment appelle-t-on ce relevé périodique, dans le vocabulaire du cours ?",
+    answer: ["reddition de comptes", "la reddition de comptes", "reddition des comptes", "une reddition de comptes"], points: 2 },
+  { id: "q092", type: "mcq", text: "Dans un mandat de distribution, il est prévu qu'en cas de manquement grave de l'une des parties (par exemple, une reddition de comptes jamais transmise malgré plusieurs relances), l'autre partie peut résilier le contrat, mais seulement après :",
+    options: ["Une décision immédiate sans préavis", "Une mise en demeure restée sans effet pendant un délai précis fixé au contrat", "L'accord d'un vendeur international", "Le remboursement intégral du minimum garanti"],
+    answer: "Une mise en demeure restée sans effet pendant un délai précis fixé au contrat", points: 2 },
   { id: "q093", type: "mcq", text: "La personne à qui vous vous adressez pour faire avancer votre projet (producteur, distributeur...) s'appelle, dans le vocabulaire du cours :",
     options: ["Un interlocuteur", "Un mandant", "Un mandataire", "Un ayant droit"],
     answer: "Un interlocuteur", points: 1 },
@@ -362,16 +364,16 @@ export const QUESTION_BANK = [
   { id: "q104", type: "mcq", text: "Vous publiez le même contenu presse et le même contenu réseaux sociaux la même semaine, sans les distinguer, juste avant votre sortie. Quel principe du cours violez-vous ?",
     options: ["Le principe du prix plancher", "La presse a besoin d'un délai avant la publication publique", "Le principe de windowing", "Le droit moral"],
     answer: "La presse a besoin d'un délai avant la publication publique", points: 2 },
-  { id: "q105", type: "mcq", text: "Selon l'exemple de calendrier éditorial vu en cours, comment évolue le rythme de publication à mesure que la date de sortie approche ?",
-    options: ["Il diminue progressivement", "Il reste strictement constant", "Il augmente, puis se maintient après la sortie", "Il s'arrête à J0"],
-    answer: "Il augmente, puis se maintient après la sortie", points: 2 },
-  { id: "q106", type: "mcq", text: "Dans l'exemple de calendrier éditorial, 8 semaines avant la sortie, que publie-t-on en priorité pour susciter la curiosité sans tout dévoiler ?",
+  { id: "q105", type: "mcq", text: "Vous construisez le calendrier éditorial de sortie de votre film : les publications sont rares 3 mois avant la sortie, se multiplient dans les deux dernières semaines, puis se poursuivent encore quelques semaines après J0. Quel principe du cours cette progression illustre-t-elle ?",
+    options: ["Un rythme de publication qui augmente progressivement, puis se maintient après la sortie", "Un rythme constant du début à la fin", "Un rythme qui diminue à l'approche de la sortie", "Un arrêt total des publications dès J0"],
+    answer: "Un rythme de publication qui augmente progressivement, puis se maintient après la sortie", points: 2 },
+  { id: "q106", type: "mcq", text: "Vous préparez le calendrier éditorial de votre film. 8 semaines avant la sortie, vous voulez susciter la curiosité sans encore tout dévoiler. Que publier en priorité à ce moment-là ?",
     options: ["La bande-annonce complète", "Un teaser sur les réseaux sociaux", "Le communiqué de premiers retours", "Les photos de la soirée de première"],
     answer: "Un teaser sur les réseaux sociaux", points: 1 },
-  { id: "q107", type: "mcq", text: "Dans l'exemple de calendrier éditorial vu en cours, que publie-t-on typiquement 2 semaines après la sortie du film, sur les réseaux sociaux ?",
-    options: ["L'annonce du teaser", "Le partage des critiques reçues, pour construire la légitimité du film", "La bande-annonce complète", "Le premier envoi presse"],
-    answer: "Le partage des critiques reçues, pour construire la légitimité du film", points: 2 },
-  { id: "q108", type: "mcq", text: "Selon le cours, une erreur fréquente consiste à arrêter toute communication le jour de la sortie (J0). Que recommande le calendrier éditorial à la place ?",
+  { id: "q107", type: "mcq", text: "Dans le calendrier éditorial de sortie de votre film, 2 semaines après la sortie, les premières critiques commencent à circuler. Que publier sur les réseaux sociaux à ce moment-là pour construire la légitimité du film ?",
+    options: ["L'annonce du teaser", "Le partage des critiques reçues", "La bande-annonce complète", "Le premier envoi presse"],
+    answer: "Le partage des critiques reçues", points: 2 },
+  { id: "q108", type: "mcq", text: "Vous établissez le calendrier éditorial de sortie de votre film. Une erreur fréquente consiste à arrêter toute communication le jour de la sortie (J0). Que recommande le cours de prévoir à la place ?",
     options: ["Ne rien publier après la sortie", "Prévoir 2 à 4 semaines de communication après la sortie pour prolonger la vie du film", "Republier uniquement le teaser initial", "Attendre un an avant de recommuniquer"],
     answer: "Prévoir 2 à 4 semaines de communication après la sortie pour prolonger la vie du film", points: 2 },
   { id: "q109", type: "text", text: "Vous rassemblez dans un seul document votre stratégie et l'ensemble de vos outils de communication (réseaux, mailing, relais). Comment appelle-t-on ce document ?",
@@ -386,7 +388,7 @@ export const QUESTION_BANK = [
   { id: "q111", type: "mcq", text: "Après la première de votre film dans un festival, que le cours recommande-t-il de faire démarrer juste après, pour capitaliser sur cette visibilité ?",
     options: ["La campagne presse", "Les projections non-theatrical uniquement", "Le dépôt en festival régional", "La négociation avec un vendeur international"],
     answer: "La campagne presse", points: 2 },
-  { id: "q112", type: "mcq", text: "Selon l'ordre type vu en cours, où se situent les projections publiques et non-theatrical par rapport à la première festival et à la campagne presse ?",
+  { id: "q112", type: "mcq", text: "Dans l'enchaînement professionnel typique d'une sortie de film, où se situent les projections publiques et non-theatrical par rapport à la première festival et à la campagne presse ?",
     options: ["Avant la première festival", "En même temps que la première festival", "Après la première festival et la campagne presse", "Immédiatement après le dépôt du dossier au festival"],
     answer: "Après la première festival et la campagne presse", points: 2 },
   { id: "q113", type: "mcq", text: "Pourquoi le cours déconseille-t-il d'actionner festival, presse et projections publiques tous en même temps ?",
@@ -397,9 +399,9 @@ export const QUESTION_BANK = [
     answer: "Le rétroplanning", points: 2 },
   { id: "q115", type: "text", text: "Contrairement à un calendrier classique qui avance dans le temps, un rétroplanning se construit dans quel sens ?",
     answer: ["en remontant", "en remontant depuis la date de sortie", "à l'envers", "a l'envers", "en partant de la date finale"], points: 2 },
-  { id: "q116", type: "mcq", text: "Dans l'exemple de rétroplanning vu en cours, que doit-on avoir finalisé 8 semaines avant la sortie ?",
-    options: ["Le dossier de presse", "La bande-annonce complète", "Le mandat de distribution", "Le sous-titrage anglais"],
-    answer: "Le dossier de presse", points: 2 },
+  { id: "q116", type: "mcq", text: "Vous construisez le rétroplanning de sortie de votre film en remontant depuis la date de sortie fixée, et vous décidez de finaliser votre dossier de presse dès la 8ᵉ semaine avant la sortie, bien avant le reste. Pourquoi ce choix est-il pertinent ?",
+    options: ["Le dossier de presse n'a aucun lien avec les délais des journalistes", "Les journalistes ont besoin de le recevoir suffisamment tôt pour préparer leurs articles avant la sortie", "C'est une obligation légale sans lien avec la presse", "Cela permet d'éviter de rédiger une note d'intention"],
+    answer: "Les journalistes ont besoin de le recevoir suffisamment tôt pour préparer leurs articles avant la sortie", points: 2 },
   { id: "q117", type: "mcq", text: "Un rétroplanning bien construit permet surtout d'éviter :",
     options: ["De payer trop cher les festivals", "D'être pris de court par une échéance mal anticipée", "De devoir écrire une note d'intention", "De signer un mandat de distribution"],
     answer: "D'être pris de court par une échéance mal anticipée", points: 1 },
