@@ -247,12 +247,14 @@ et leur score intacts dans KV — seule la mise en forme PDF avait échoué. Pas
 besoin de faire repasser l'évaluation : une route dédiée régénère tous les PDF
 d'un coup à partir des données déjà enregistrées.
 
-1. Ajoutez un secret `ADMIN_SECRET` (n'importe quelle chaîne aléatoire de
-   votre choix) dans **Settings → Variables and secrets → Runtime variables
-   and secrets** (la même section que `RESEND_API_KEY`, jamais celle sous
-   « Builds » — voir l'avertissement plus haut).
-2. Ouvrez dans un navigateur :
-   `https://<votre-url>/api/admin-regenerate-pdfs?secret=<votre ADMIN_SECRET>`
+Rien à configurer dans le tableau de bord Cloudflare : `ADMIN_SECRET` est
+défini directement dans `wrangler.toml` (comme `ADMIN_EMAIL`), donc déjà actif
+après déploiement.
+
+1. Prenez l'URL de votre site — la même que celle donnée aux participants.
+2. Ajoutez-y `/api/admin-regenerate-pdfs?secret=` suivi de la valeur
+   d'`ADMIN_SECRET` dans `wrangler.toml`, et ouvrez cette adresse dans un
+   navigateur.
 3. La page affiche un tableau — participant, email, score, et un bouton
    « Télécharger le PDF » par ligne, prêt à cliquer pour chaque résultat.
    Ajoutez `&format=json` à l'URL pour obtenir la réponse brute (utile pour un

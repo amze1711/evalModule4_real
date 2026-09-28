@@ -16,9 +16,10 @@ binding = "ASSETS"
 binding = "QCM_KV"
 id = "5a9bc090e00c448585943397e74077da"
 
-# Adresse recevant chaque résultat. Pas un secret (juste une adresse mail de
-# destination) : la mettre ici, dans le code versionné, évite qu'elle
-# disparaisse après un redéploiement, contrairement à une variable ajoutée
-# uniquement dans le tableau de bord Cloudflare.
+# Adresse recevant chaque résultat, et clé d'accès à la page de régénération
+# des PDF (/api/admin-regenerate-pdfs). Mises ici plutôt que dans le tableau
+# de bord Cloudflare pour qu'elles ne disparaissent jamais après un
+# redéploiement et pour éviter toute manipulation de secrets côté dashboard.
 [vars]
 ADMIN_EMAIL = "amze.clap@gmail.com"
+ADMIN_SECRET = "bbf546f6c72a2d54aa3335f0"
