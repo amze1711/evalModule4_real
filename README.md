@@ -253,10 +253,11 @@ d'un coup à partir des données déjà enregistrées.
    « Builds » — voir l'avertissement plus haut).
 2. Ouvrez dans un navigateur :
    `https://<votre-url>/api/admin-regenerate-pdfs?secret=<votre ADMIN_SECRET>`
-3. La réponse JSON liste chaque résultat traité avec son statut (`ok` ou
-   `error`) et, pour chaque succès, son `resultPdfUrl` prêt à ouvrir/télécharger
-   et à transmettre au participant concerné. Aucun email n'est renvoyé
-   automatiquement par cette route — elle ne fait que reconstruire les PDF et
+3. La page affiche un tableau — participant, email, score, et un bouton
+   « Télécharger le PDF » par ligne, prêt à cliquer pour chaque résultat.
+   Ajoutez `&format=json` à l'URL pour obtenir la réponse brute (utile pour un
+   script). Aucun email n'est renvoyé automatiquement par cette route — elle
+   ne fait que reconstruire les PDF et
    mettre à jour leur lien.
 
 ---
