@@ -239,6 +239,26 @@ Dès qu'un domaine sera vérifié sur Resend, ce même PDF sera automatiquement
 joint aux emails envoyés (participant et formateur), sans changement à faire
 dans le code.
 
+### Régénérer les PDF de résultats déjà soumis
+
+Si le générateur de PDF a été corrigé après coup (bug d'encodage, limite de
+temps CPU...), les résultats soumis **avant** la correction ont leurs réponses
+et leur score intacts dans KV — seule la mise en forme PDF avait échoué. Pas
+besoin de faire repasser l'évaluation : une route dédiée régénère tous les PDF
+d'un coup à partir des données déjà enregistrées.
+
+1. Ajoutez un secret `ADMIN_SECRET` (n'importe quelle chaîne aléatoire de
+   votre choix) dans **Settings → Variables and secrets → Runtime variables
+   and secrets** (la même section que `RESEND_API_KEY`, jamais celle sous
+   « Builds » — voir l'avertissement plus haut).
+2. Ouvrez dans un navigateur :
+   `https://<votre-url>/api/admin-regenerate-pdfs?secret=<votre ADMIN_SECRET>`
+3. La réponse JSON liste chaque résultat traité avec son statut (`ok` ou
+   `error`) et, pour chaque succès, son `resultPdfUrl` prêt à ouvrir/télécharger
+   et à transmettre au participant concerné. Aucun email n'est renvoyé
+   automatiquement par cette route — elle ne fait que reconstruire les PDF et
+   mettre à jour leur lien.
+
 ---
 
 ## Développement local (optionnel, pour tester avant de déployer)
@@ -349,6 +369,7 @@ functions/api/start.js        → handler POST /api/start (démarrage, tirage, h
 functions/api/violation.js    → handler POST /api/violation (nouveau tirage après changement de fenêtre)
 functions/api/submit.js       → handler POST /api/submit (correction serveur, enregistrement, email, PDF)
 functions/api/result-pdf.js   → handler GET /api/result-pdf?token=... (téléchargement du PDF de résultat)
+functions/api/admin-regenerate-pdfs.js → handler GET /api/admin-regenerate-pdfs?secret=... (régénère tous les PDF depuis KV, protégé par ADMIN_SECRET)
 functions/_lib/questions.js   → banque de 140 questions AVEC les bonnes réponses (jamais public)
 functions/_lib/random.js      → tirage pseudo-aléatoire déterministe (mulberry32 + hash)
 functions/_lib/grading.js     → correction et filtrage des questions envoyées au client

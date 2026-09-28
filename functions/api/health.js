@@ -11,5 +11,8 @@ export async function onRequestGet({ env }) {
       RESEND_API_KEY: Boolean(env.RESEND_API_KEY),
       ADMIN_EMAIL: Boolean(env.ADMIN_EMAIL),
     },
+    admin_config: {
+      ADMIN_SECRET: Boolean(env.ADMIN_SECRET),
+    },
   });
 }

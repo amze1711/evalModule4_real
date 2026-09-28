@@ -10,6 +10,30 @@ const PAGE_HEIGHT = 841.89;
 const MARGIN = 40;
 const CONTENT_WIDTH = PAGE_WIDTH - MARGIN * 2;
 
+// La police standard de pdf-lib encode en WinAnsi (Windows-1252) : tout
+// caractère hors de cette table fait planter drawText(). Le texte affiché ici
+// vient à la fois du contenu des questions ET des réponses tapées librement
+// par les participants (donc totalement imprévisible — un participant peut
+// taper n'importe quel caractère, y compris un emoji). Plutôt que d'espérer
+// que ce cas ne se reproduise jamais, chaque texte est nettoyé avant d'être
+// dessiné : quelques caractères courants sont remplacés par un équivalent
+// lisible, le reste par "?" plutôt que de faire planter toute la génération.
+const WINANSI_REPLACEMENTS = {
+  "→": "->", "←": "<-", "↑": "^", "↓": "v", // → ← ↑ ↓
+  "✓": "[OK]", "✔": "[OK]", "✗": "[X]", "✘": "[X]", // ✓ ✔ ✗ ✘
+};
+const WINANSI_EXTRA = "€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ";
+
+function toWinAnsiSafe(value) {
+  const str = String(value);
+  let out = "";
+  for (const ch of str) {
+    if (ch.codePointAt(0) <= 0xFF || WINANSI_EXTRA.includes(ch)) { out += ch; continue; }
+    out += WINANSI_REPLACEMENTS[ch] || "?";
+  }
+  return out;
+}
+
 function wrapText(text, font, size, maxWidth) {
   const words = String(text).split(/\s+/);
   const lines = [];
@@ -47,7 +71,8 @@ export async function buildResultPdf({
   function drawLine(text, { size = 10, bold = false, color, gap = 4 } = {}) {
     const f = bold ? fontBold : font;
     const c = color || rgb(0.11, 0.11, 0.18); // proche de --ink du frontend
-    for (const line of wrapText(text, f, size, CONTENT_WIDTH)) {
+    const safeText = toWinAnsiSafe(text);
+    for (const line of wrapText(safeText, f, size, CONTENT_WIDTH)) {
       ensureSpace(size + gap);
       page.drawText(line, { x: MARGIN, y, size, font: f, color: c });
       y -= size + gap;
