@@ -51,24 +51,25 @@ function isValidEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
-// Le plein écran est obligatoire pour démarrer : ça empêche l'écran fractionné
-// (split-screen) au moment du départ, et en sortir pendant l'épreuve est
-// ensuite détecté comme un changement de fenêtre (voir plus bas). Comme
-// toute détection côté navigateur, ça ne verrouille pas réellement l'appareil
-// (rien n'empêche un deuxième écran ou un deuxième appareil) — ça reste de la
-// détection, pas une prévention technique absolue.
-async function requireFullscreen() {
-  if (!document.documentElement.requestFullscreen) {
-    throw new Error("Votre navigateur ne supporte pas le mode plein écran, requis pour cette évaluation.");
-  }
-  try {
-    await document.documentElement.requestFullscreen();
-  } catch (e) {
-    throw new Error("Le plein écran a été refusé ou n'a pas pu être activé. Autorisez-le pour démarrer l'évaluation.");
-  }
-  if (!document.fullscreenElement) {
-    throw new Error("Le plein écran est requis pour démarrer l'évaluation.");
-  }
+// Le plein écran est tenté au démarrage pour limiter l'écran fractionné
+// (split-screen), et en sortir pendant l'épreuve est détecté comme un
+// changement de fenêtre (voir plus bas). Mais l'API plein écran n'existe
+// tout simplement pas sur certains navigateurs (par ex. TOUS les navigateurs
+// sur iPhone — Safari, Chrome, Brave y compris, puisqu'iOS impose son moteur
+// WebKit à tous, qui n'expose pas cette API sur iPhone) : on ne bloque donc
+// jamais le démarrage de l'évaluation si le plein écran échoue ou n'est pas
+// supporté, sous peine d'empêcher des stagiaires légitimes de passer
+// l'épreuve depuis leur mobile. Comme pour la détection de changement de
+// fenêtre, ça reste une détection best-effort, jamais une prévention réelle.
+function getRequestFullscreenFn(el) {
+  return el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen || null;
+}
+
+async function tryEnterFullscreen() {
+  const el = document.documentElement;
+  const requestFn = getRequestFullscreenFn(el);
+  if (!requestFn) return;
+  try { await requestFn.call(el); } catch (e) { /* refusé ou indisponible : on continue quand même */ }
 }
 
 $("btn-start").addEventListener("click", async () => {
@@ -86,7 +87,7 @@ $("btn-start").addEventListener("click", async () => {
   $("btn-start").textContent = "Chargement...";
 
   try {
-    await requireFullscreen();
+    await tryEnterFullscreen();
 
     const res = await callBackend("start", { nom, email });
     if (res.status !== "ok") throw new Error(res.message || "Erreur au démarrage.");
@@ -244,20 +245,25 @@ async function handleViolation(reason) {
   }
 }
 
+function isInFullscreen() {
+  return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+}
+
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) handleViolation("visibility");
 });
 window.addEventListener("blur", () => handleViolation("visibility"));
-document.addEventListener("fullscreenchange", () => {
-  if (!document.fullscreenElement) handleViolation("fullscreen");
+["fullscreenchange", "webkitfullscreenchange", "mozfullscreenchange", "MSFullscreenChange"].forEach(evt => {
+  document.addEventListener(evt, () => {
+    if (!isInFullscreen()) handleViolation("fullscreen");
+  });
 });
 
 // Permet de revenir en plein écran d'un clic depuis le bandeau d'alerte —
 // requestFullscreen() doit être déclenché par un vrai geste utilisateur,
 // ce qui exclut de le relancer automatiquement depuis l'événement fullscreenchange.
-$("btn-refullscreen").addEventListener("click", async () => {
-  try { await document.documentElement.requestFullscreen(); } catch (e) {}
-});
+// Sans support du plein écran (ex. iPhone), ce bouton n'a simplement aucun effet.
+$("btn-refullscreen").addEventListener("click", () => { tryEnterFullscreen(); });
 
 // Dissuasion basique : clic droit et copier-coller désactivés sur la zone de quiz.
 document.addEventListener("contextmenu", e => {

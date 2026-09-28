@@ -1,9 +1,10 @@
 # QCM d'évaluation — Module 4 : Diffusion et distribution du documentaire
 
 Système d'évaluation en ligne : 140 questions en banque, 40 tirées par participant,
-chronomètre de 35 min basé sur l'heure serveur, plein écran obligatoire au départ,
-détection de changement de fenêtre ou de sortie du plein écran avec régénération
-du tirage, enregistrement et notation automatique côté serveur.
+chronomètre de 35 min basé sur l'heure serveur, plein écran activé au départ
+quand le navigateur le permet, détection de changement de fenêtre ou de sortie
+du plein écran avec régénération du tirage, enregistrement et notation
+automatique côté serveur.
 
 ## ⚠️ Limites techniques à connaître avant utilisation
 
@@ -16,11 +17,16 @@ quelle que soit la plateforme utilisée :
    passe sur l'appareil utilisé pour l'évaluation, pas sur un appareil externe.
 2. **Aucun navigateur ne peut être verrouillé** depuis une simple page web — la
    détection de perte de focus est la meilleure alternative technique possible.
-   Le plein écran obligatoire au démarrage (voir plus bas) renforce cette
-   détection mais ne verrouille rien non plus : rien n'empêche techniquement
-   un deuxième écran ou un deuxième appareil. Un vrai verrouillage demanderait
-   un logiciel dédié (type *Safe Exam Browser*) installé sur chaque poste, ce
-   qui sort du périmètre d'un site web hébergé.
+   Le plein écran activé au démarrage (voir plus bas) renforce cette détection
+   mais ne verrouille rien non plus, et n'est même pas disponible partout :
+   **aucun navigateur sur iPhone ne supporte l'API plein écran** (Safari,
+   Chrome, Brave y compris — iOS impose son moteur WebKit à tous, qui ne
+   l'expose pas sur iPhone). Sur ces appareils, l'évaluation démarre
+   normalement sans plein écran, et seule la détection de changement de
+   fenêtre reste active. Rien n'empêche non plus techniquement un deuxième
+   écran ou un deuxième appareil. Un vrai verrouillage demanderait un logiciel
+   dédié (type *Safe Exam Browser*) installé sur chaque poste, ce qui sort du
+   périmètre d'un site web hébergé.
 
 Il est recommandé d'annoncer clairement ces règles aux stagiaires en amont — l'effet
 dissuasif (nominatif + horodatage serveur + détection) reste réel, même sans blocage total.
@@ -299,13 +305,20 @@ Dans `functions/_lib/config.js` :
 
 ---
 
-## Plein écran obligatoire et ce qui se passe en cas de changement de fenêtre
+## Plein écran et ce qui se passe en cas de changement de fenêtre
 
-Au clic sur « Commencer l'évaluation », le navigateur demande le plein écran
-(`requestFullscreen()`) : si le stagiaire le refuse ou que son navigateur ne le
-supporte pas, l'évaluation ne démarre pas (message d'erreur affiché, aucune
-session créée). Objectif principal : rendre plus difficile l'écran fractionné
-(split-screen) avec une autre application ouverte à côté du questionnaire.
+Au clic sur « Commencer l'évaluation », le navigateur tente d'activer le plein
+écran (`requestFullscreen()`, avec repli sur les variantes préfixées des
+anciens navigateurs). Objectif principal : rendre plus difficile l'écran
+fractionné (split-screen) avec une autre application ouverte à côté du
+questionnaire.
+
+C'est du **best-effort, jamais bloquant** : si le navigateur refuse ou ne
+supporte pas cette API (notamment **tout navigateur sur iPhone**, qui n'a
+techniquement pas accès à l'API plein écran sous iOS), l'évaluation démarre
+normalement sans plein écran. Bloquer le démarrage aurait empêché des
+stagiaires légitimes sur mobile de passer l'épreuve — inacceptable pour une
+application pensée mobile-first.
 
 Ensuite, pendant l'évaluation :
 
